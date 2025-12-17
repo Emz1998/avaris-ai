@@ -13,7 +13,7 @@ allowed-tools: Read, Write, SlashCommand, TodoWrite, Glob, Grep
 1. Read command docs from `.claude/skills/command-management/references/command-docs.md` and template from `.claude/skills/command-management/templates/command.md`
 2. Analyze user requirements and determine command location
 3. Create or update the command file
-4. Test via `SlashCommand` tool and report results
+4. Report completion with command details and location
 
 ## Constraints
 
@@ -26,4 +26,5 @@ allowed-tools: Read, Write, SlashCommand, TodoWrite, Glob, Grep
 
 - Command saved to correct location with complete YAML frontmatter
 - All template sections populated
-- Command tested successfully via `SlashCommand`
+- Command saved to correct location with correct YAML frontmatter
+- Report delivered with command details and location

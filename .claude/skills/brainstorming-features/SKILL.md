@@ -26,6 +26,7 @@ This skill helps generate, explore, and structure feature ideas for mobile and w
 Before generating ideas, understand:
 
 **Project Context:**
+
 - App type (mobile, web, desktop, PWA)
 - Tech stack (React Native, Next.js, etc.)
 - Target users and personas
@@ -33,6 +34,7 @@ Before generating ideas, understand:
 - Existing features (if applicable)
 
 **Brainstorming Scope:**
+
 - Specific feature area or general exploration
 - Problem to solve or opportunity to capture
 - Constraints (technical, budget, timeline)
@@ -41,24 +43,28 @@ Before generating ideas, understand:
 ### 2. Idea Generation Methods
 
 **Method A - Problem-First:**
+
 1. Identify user pain points
 2. Generate solutions addressing each pain point
 3. Rank by impact vs. effort
 4. Select top 3-5 for detailed exploration
 
 **Method B - Opportunity-First:**
+
 1. List market opportunities or trends
 2. Generate features leveraging opportunities
 3. Assess feasibility and differentiation
 4. Select promising concepts
 
 **Method C - Competitive Analysis:**
+
 1. Review competitor features
 2. Identify gaps and improvements
 3. Generate unique variations or enhancements
 4. Prioritize by competitive advantage
 
 **Method D - User Journey Mapping:**
+
 1. Map current user journey
 2. Identify friction points
 3. Generate features smoothing the journey
@@ -84,11 +90,13 @@ For each feature idea, provide:
 As a [user type], I want to [action] so that [benefit].
 
 **Key capabilities:**
+
 - Capability 1
 - Capability 2
 - Capability 3
 
 **Technical considerations:**
+
 - Technology/library suggestions
 - Integration points
 - Data requirements
@@ -101,6 +109,7 @@ As a [user type], I want to [action] so that [benefit].
 [User value and business value]
 
 **Success metrics:**
+
 - Metric 1 (e.g., engagement increase)
 - Metric 2 (e.g., task completion rate)
 ```
@@ -110,16 +119,19 @@ As a [user type], I want to [action] so that [benefit].
 After initial generation, refine ideas by:
 
 **Feasibility Check:**
+
 - Technical achievability with current stack
 - Resource requirements (time, team, infrastructure)
 - Dependencies on other features or systems
 
 **Value Assessment:**
+
 - User value score (1-10)
 - Business value score (1-10)
 - Effort estimate (person-days or story points)
 
 **Prioritization Matrix:**
+
 ```
 High Value, Low Effort  → Do First (Quick Wins)
 High Value, High Effort → Strategic Investments
@@ -133,24 +145,29 @@ Low Value, High Effort  → Avoid
 Use the full template above for 3-5 top features
 
 **Format 2 - Feature List (Concise):**
+
 ```markdown
 1. **[Feature Name]** - [One-line description] [Complexity: Low/Med/High]
 2. **[Feature Name]** - [One-line description] [Complexity: Low/Med/High]
-...
+   ...
 ```
 
 **Format 3 - Feature Roadmap:**
 Organize by phases or sprints:
+
 ```markdown
 ### Phase 1 - Foundation (Sprint 1-2)
+
 - Feature A (enables core workflow)
 - Feature B (critical user need)
 
 ### Phase 2 - Enhancement (Sprint 3-4)
+
 - Feature C (improves experience)
 - Feature D (adds value)
 
 ### Phase 3 - Advanced (Sprint 5+)
+
 - Feature E (differentiator)
 - Feature F (scale optimization)
 ```
@@ -181,12 +198,14 @@ Nursing students preparing for exams and clinical rotations
 As a nursing student, I want my notes automatically converted to flashcards so that I can focus on studying instead of card creation.
 
 **Key capabilities:**
+
 - Auto-detect medical terms and concepts
 - Generate question-answer pairs from context
 - Spaced repetition scheduling
 - Manual edit and refinement
 
 **Technical considerations:**
+
 - OpenAI API for term extraction
 - IndexedDB/Dexie for local flashcard storage
 - Background processing for large notes
@@ -196,11 +215,13 @@ As a nursing student, I want my notes automatically converted to flashcards so t
 Medium - Requires AI integration and smart parsing logic, but leverages existing note structure
 
 **Expected impact:**
+
 - 70% reduction in flashcard creation time
 - Increased study time availability
 - Higher exam preparation quality
 
 **Success metrics:**
+
 - Flashcards generated per note
 - User edits to auto-generated cards (lower = better accuracy)
 - Study session frequency increase
@@ -254,6 +275,7 @@ Casual fitness enthusiasts seeking habit formation
 As a user, I want to see my workout streak and earn rewards so that I stay motivated to exercise daily.
 
 **Key capabilities:**
+
 - Daily streak counter with flame icon visualization
 - Milestone badges (7-day, 30-day, 100-day streaks)
 - Streak freeze option (1 per week)
@@ -261,6 +283,7 @@ As a user, I want to see my workout streak and earn rewards so that I stay motiv
 - Push notifications for streak risk
 
 **Technical considerations:**
+
 - Local notification scheduling (Expo Notifications)
 - Streak calculation with timezone handling
 - Badge icon assets and animations
@@ -271,11 +294,13 @@ As a user, I want to see my workout streak and earn rewards so that I stay motiv
 Low - Simple date tracking logic with notification system
 
 **Expected impact:**
+
 - 40% increase in daily active users
 - 25% improvement in 30-day retention
 - Higher social engagement and viral growth
 
 **Success metrics:**
+
 - % users with active streaks
 - Average streak length
 - Notification engagement rate
@@ -285,6 +310,7 @@ Low - Simple date tracking logic with notification system
 ## Best Practices
 
 ### Do:
+
 - Start broad, then narrow to specific features
 - Consider technical feasibility early
 - Include user value in every idea
@@ -293,6 +319,7 @@ Low - Simple date tracking logic with notification system
 - Balance innovation with practicality
 
 ### Don't:
+
 - Generate ideas without context
 - Ignore technical constraints
 - Overlook existing features or patterns
@@ -303,6 +330,7 @@ Low - Simple date tracking logic with notification system
 ## Brainstorming Triggers
 
 Respond to these phrases by activating this skill:
+
 - "Brainstorm features for..."
 - "Generate app ideas for..."
 - "What features could we add to..."
@@ -323,5 +351,6 @@ After initial brainstorming:
 ## Additional Resources
 
 For further refinement, consider:
+
 - **references/feature-templates.md** - More detailed templates for specific feature types
 - **references/prioritization-frameworks.md** - Advanced prioritization methods (RICE, MoSCoW, Kano)

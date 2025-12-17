@@ -1,42 +1,42 @@
 ---
 name: specs-creator
-description: Use PROACTIVELY this skill when you need to create comprehensive PRDs, tech specs, and ux specs based on feature description. If the user specify "Create PRD", "Create Tech Specs", or "Create UX Specs", this skill must be triggered.
+description: Use PROACTIVELY this skill when you need to create or update comprehensive PRDs, tech specs, and UI/UX specs based on feature description. If the user specify "Create PRD", "Create Tech Specs", or "Create UI/UX Specs", this skill must be triggered.
 ---
 
-**Goal**: Create comprehensive PRDs, tech specs, and ux specs based on feature requirements
+**Goal**: Create or update comprehensive PRDs, tech specs, and UI/UX specs based on feature requirements
 
 ## Dependency Chain
 
 ```
-app-vision.md → prd.md → tech-specs.md → ux.md
+brainstorm-summary.md → prd.md → tech-specs.md → ui-ux.md
 ```
 
 ## Workflow
 
-- T001: Read and analyze the appropriate template in `.claude/skills/specs-creator/templates/` for structure compliance
-- T002: Analyze feature requirements
-- T003: Choose the the appropriate instructions in the `.claude/skills/specs-creator/instructions/`
-- T003: Execute the instructions
-- T004: Run Validation Scripts in `.claude/skills/specs-creator/scripts/`
-- T005: Provide comprehensive report to user with specs details, location, and usage guidance
+1. Read and analyze the brainstorm-summary.md file to understand the project vision and goals
+2. Choose the right template in `.claude/skills/specs-creator/templates/` based on the dependency chain
+3. Generate the spec based on the template and the brainstorm-summary.md file
+4. Provide comprehensive report to user with specs details, location, and usage guidance
 
-## Prohibited Tasks
+**Important**: If the spec type is `tech-specs`, you have to both read the `brainstorm-summary.md` and `prd.md` files to understand the architecture and the dependencies
+**Important**: If the spec type is `ux`, you have to read all preceding specs to understand the design principles and the color system
+
+## Constraints
 
 - NEVER create a spec if its dependency doesn't exist yet (see Dependency Chain)
 - NEVER write or modify actual code implementation
 - NEVER overwrite existing specs without explicit user approval
 - DO NOT make architectural decisions beyond documentation scope
 - NEVER skip template compliance validation
-- DO NOT create specs outside designated `specs/` directory
+- DO NOT create specs outside designated `project/specs/` directory
 - NEVER assume requirements without user clarification
 
-## Success Criteria
+## Acceptance Criteria
 
-- All specs follow the template structure in `.claude/skills/specs-creator/templates/`
-- Feature requirements are fully captured with no ambiguity
-- Validation scripts pass without errors
-- Specs are saved to correct location in `specs/`
-- User receives clear report with file location and usage guidance
+- [ ] Generated spec contains all required sections from the corresponding template
+- [ ] All placeholder fields in the template are populated with feature-specific content
+- [ ] Spec file is saved to `specs/` directory with correct naming convention
+- [ ] Completion report includes: file path, spec type, and next steps for the user
 
 ## Template Paths
 
