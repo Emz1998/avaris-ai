@@ -1,0 +1,94 @@
+{
+    "project_name": "Avaris - NBA Betting Analytics Application",
+    "target_release_date": "2026-01-01",
+
+    "project_status": {
+        "completed": false,
+        "in_progress": false,
+        "not_started": true
+    },
+
+    "specs": {
+        "prd": {
+            "status": {
+                "completed": false,
+                "in_progress": false,
+                "not_started": true
+            }
+        },
+        "tech_specs": {
+            "status": {
+                "completed": false,
+                "in_progress": false,
+                "not_started": true
+            }
+        },
+        "ui_ux": {
+            "status": {
+                "completed": false,
+                "in_progress": false,
+                "not_started": true
+            }
+        }
+    },
+
+    "roadmap": {
+        "total": {
+            "overall": {
+                "tasks": 0,
+                "milestones": 0,
+                "phases": 0
+            },
+            "completed": {
+                "tasks": 0,
+                "milestones": 0,
+                "phases": 0
+            },
+            "remaining": {
+                "tasks": 0,
+                "milestones": 0,
+                "phases": 0
+            }
+        },
+        "current": {
+            "tasks": {
+                "number": 0,
+                "description": "Foundation",
+                "status": false
+            },
+            "milestones": {
+                "number": 0,
+                "description": "Foundation",
+                "status": false
+            },
+            "phases": {
+                "number": 1,
+                "description": "Foundation",
+                "status": false
+            }
+        },
+        "phase": {
+            "1":{
+                "description": "Foundation",
+                "status": false,
+                "milestone": {
+                    "1":{
+                        "description": "Foundation",
+                        "status": false,
+                        "task": {
+                            "1":{
+                                "description": "Install dependencies",
+                                "status": false
+                            }
+                        }
+                }
+            }
+        
+        }
+    },
+
+    "metadata": {
+        "last_updated": "2025-12-17",
+        "version": "v0.1.0"
+    }
+}}

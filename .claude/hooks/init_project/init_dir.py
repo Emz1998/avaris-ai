@@ -12,22 +12,30 @@ from init_status import init_status, Status  # type: ignore
 
 STATUS_FILE = Path(__file__).parent.parent.parent.parent / "project" / "status.json"
 
-SPEC_DIR = {
-    "specs": [
-        "brainstorm-summary.md",
-        "prd.md",
-        "tech-specs.md",
-        "ux.md",
-    ]
-}
+SPEC_DIR = [
+    "brainstorm-summary.md",
+    "prd.md",
+    "tech-specs.md",
+    "ux.md",
+]
 
-RELEASE_PLAN_DIR = {
-    "release-plan": [
-        "roadmap.json",
-        "roadmap.md",
-        "overview.md",
-    ]
-}
+
+RELEASE_PLAN_DIR = [
+    "roadmap.json",
+    "roadmap.md",
+    "overview.md",
+]
+
+MILESTONE_DIR = [
+    "decisions",
+    "plans",
+    "research",
+    "codebase-status",
+    "revisions",
+    "reports",
+    "misc",
+    "status.json",
+]
 
 
 def build_project_dir(version: str, milestone_name: str) -> dict[str, Any]:
@@ -38,16 +46,7 @@ def build_project_dir(version: str, milestone_name: str) -> dict[str, Any]:
                     "specs": SPEC_DIR,
                     "release-plan": RELEASE_PLAN_DIR,
                     "milestones": {
-                        milestone_name: [
-                            "decisions",
-                            "plans",
-                            "research",
-                            "codebase-status",
-                            "revisions",
-                            "reports",
-                            "misc",
-                            "status.json",
-                        ]
+                        milestone_name: MILESTONE_DIR,
                     },
                 }
             },
@@ -92,55 +91,35 @@ def init_file(file_path: str) -> Path:
     return path
 
 
-def init_project(item: Any, project_path: str = "project"):
+def init_project(item: Any, project_path: str) -> str:
     if type(item) == str:
         if item.endswith((".json", ".md")):
-            init_file(f"{project_path}/{item}")
+            init_file(f"{project_path}{item}")
         else:
-            init_dir(f"{project_path}/{item}")
+            init_dir(f"{project_path}{item}")
     elif type(item) == dict:
         for key, value in item.items():
-            init_project(value, f"{project_path}/{key}")
+            init_dir(f"{project_path}{key}")
+            init_project(value, f"{project_path}{key}/")
     elif type(item) == list:
         for item in item:
-            init_project(item)
+            init_project(item, project_path)
     else:
         raise ValueError(f"Invalid item type: {type(item)}")
-
-
-def test_main() -> bool:
-    # Initialize project directory
-    init_dir("project")
-
-    # Initialize project status
-    init_status(project_status)
-
-    # Initialize project version directory
-    version = get_status("version")
-    init_dir(f"project/{version}")
-
-    # Initialize project version files and directories
-    for dir in PROJECT_DIR:
-        if dir.endswith((".json", ".md")):
-            init_file(f"project/{version}/{dir}")
-        init_dir(f"project/{version}/{dir}")
-
-    # Initialize Milestones directory
-    milestones = get_status("milestones")
-    if not milestones:
-        milestones = "MS-001_[Initial Setup]"
-    init_dir(f"project/{version}/milestones/{milestones}")
-
-    return True
+    return project_path
 
 
 def main() -> bool:
-    init_project(project_status)
+    init_dir("project")
+    init_status(project_status)
+    current_milestone = get_status("current_milestone")
+    current_version = get_status("version")
+    project_dir = build_project_dir(
+        version=current_version, milestone_name=current_milestone
+    )
+    init_project(project_dir, "")
     return True
 
 
 if __name__ == "__main__":
-    project_dir = build_project_dir(
-        version="v0.1.0", milestone_name="MS-001_[Initial Setup]"
-    )
-    init_project(project_dir)
+    main()

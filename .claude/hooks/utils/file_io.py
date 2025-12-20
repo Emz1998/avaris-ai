@@ -7,11 +7,12 @@ from typing import Any
 
 class FileReadError(Exception):
     """Raised when a file cannot be read."""
+
     pass
 
 
 def read_file(file_path: str) -> str:
-    """Read file content with error handling."""
+    # Read file content with error handling.
     try:
         return Path(file_path).read_text(encoding="utf-8")
     except FileNotFoundError:
