@@ -4,6 +4,7 @@ from .cache import get_cache, set_cache, write_cache, load_cache
 from .status import get_status, set_status
 from .file_manager import read_file, write_file
 from .json_handler import load_json, set_json, get_json
+from .extractor import extract_slash_command_name
 
 __all__ = [
     # Input/Output
@@ -28,4 +29,6 @@ __all__ = [
     "load_json",
     "set_json",
     "get_json",
+    # Extractor
+    "extract_slash_command_name",
 ]

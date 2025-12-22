@@ -50,16 +50,18 @@ Schema for `project/status.json` - single source of truth for project progress t
             "T001": {
               "description": "Initialize Next.js 15.1 project with App Router",
               "priority": true,
-              "subagent": false,
-              "status": "not_started",
-              "refs": []
+              "subagent_delegation": false,
+              "dependencies": [],
+              "subagents": [],
+              "status": "not_started"
             },
             "T002": {
               "description": "Configure Tailwind CSS 4.1 with Shadcn UI theme tokens",
               "priority": true,
-              "subagent": false,
-              "status": "not_started",
-              "refs": ["UX Section 2"]
+              "subagent_delegation": false,
+              "subagents": [],
+              "dependencies": [],
+              "status": "not_started"
             }
           },
           "acceptance_criteria": [

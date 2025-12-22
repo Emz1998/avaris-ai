@@ -14,6 +14,5 @@ def read_file(file_path: str) -> str:
 
 
 def write_file(file_path: str, content: str) -> None:
-    existing_content = read_file(file_path)
-    new_content = existing_content + content
-    Path(file_path).write_text(new_content, encoding="utf-8")
+    """Write content to file, overwriting existing content."""
+    Path(file_path).write_text(content, encoding="utf-8")

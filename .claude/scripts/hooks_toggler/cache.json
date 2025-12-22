@@ -2,22 +2,12 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Task",
+        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/agent_prompt/prompt_refiner.py\"",
-            "timeout": 30
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/prompt_refiner/prompt_refiner.py\""
+            "command": "uv run \"$CLAUDE_PROJECT_DIR/.claude/hooks/status_validator/validate_status.py\"",
+            "timeout": 10
           }
         ]
       }

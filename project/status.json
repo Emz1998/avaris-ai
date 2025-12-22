@@ -1,94 +1,106 @@
 {
-    "project_name": "Avaris - NBA Betting Analytics Application",
-    "target_release_date": "2026-01-01",
-
-    "project_status": {
-        "completed": false,
-        "in_progress": false,
-        "not_started": true
-    },
-
-    "specs": {
-        "prd": {
-            "status": {
-                "completed": false,
-                "in_progress": false,
-                "not_started": true
+  "name": "Project Name",
+  "version": "0.1.0",
+  "target_release": "2026-01-01",
+  "status": "not_started",
+  "phases": [
+    {
+      "id": "PH-001",
+      "name": "Foundation - Environment Setup",
+      "status": "not_started",
+      "milestones": [
+        {
+          "id": "MS-001",
+          "name": "Environment Setup",
+          "focus": "setup",
+          "goal": "Next.js 15 + React 19 fully configured",
+          "status": "not_started",
+          "dependencies": [],
+          "success_criteria": [
+            {
+              "id": "SC-001",
+              "description": "npm run dev starts without errors",
+              "met": false
             }
-        },
-        "tech_specs": {
-            "status": {
-                "completed": false,
-                "in_progress": false,
-                "not_started": true
-            }
-        },
-        "ui_ux": {
-            "status": {
-                "completed": false,
-                "in_progress": false,
-                "not_started": true
-            }
-        }
-    },
-
-    "roadmap": {
-        "total": {
-            "overall": {
-                "tasks": 0,
-                "milestones": 0,
-                "phases": 0
-            },
-            "completed": {
-                "tasks": 0,
-                "milestones": 0,
-                "phases": 0
-            },
-            "remaining": {
-                "tasks": 0,
-                "milestones": 0,
-                "phases": 0
-            }
-        },
-        "current": {
-            "tasks": {
-                "number": 0,
-                "description": "Foundation",
-                "status": false
-            },
-            "milestones": {
-                "number": 0,
-                "description": "Foundation",
-                "status": false
-            },
-            "phases": {
-                "number": 1,
-                "description": "Foundation",
-                "status": false
-            }
-        },
-        "phase": {
-            "1":{
-                "description": "Foundation",
-                "status": false,
-                "milestone": {
-                    "1":{
-                        "description": "Foundation",
-                        "status": false,
-                        "task": {
-                            "1":{
-                                "description": "Install dependencies",
-                                "status": false
-                            }
-                        }
+          ],
+          "tasks": [
+            {
+              "id": "T001",
+              "description": "Initialize Next.js 15.1 project",
+              "status": "not_started",
+              "parallel": false,
+              "owner": "fullstack-developer",
+              "dependencies": [],
+              "acceptance_criteria": [
+                {
+                  "id": "AC-001",
+                  "description": "npm run dev starts without errors",
+                  "met": false
                 }
+              ]
             }
-        
+          ]
+        },
+        {
+          "id": "MS-002",
+          "name": "Define Contracts/Types",
+          "focus": "feature",
+          "goal": "Define core type contracts and validation schemas that establish the data structure foundation for features",
+          "status": "not_started",
+          "dependencies": [],
+          "success_criteria": [
+            {
+              "id": "SC-002",
+              "description": "Core type contracts and validation schemas are defined",
+              "met": false
+            }
+          ],
+          "tasks": [
+            {
+              "id": "T002",
+              "description": "Create TypeScript interfaces for core data structures",
+              "status": "not_started",
+              "parallel": false,
+              "owner": "fullstack-developer",
+              "dependencies": [],
+              "acceptance_criteria": [
+                {
+                  "id": "AC-002",
+                  "description": "Core type contracts and validation schemas are defined",
+                  "met": false
+                }
+              ]
+            }
+          ]
         }
-    },
-
-    "metadata": {
-        "last_updated": "2025-12-17",
-        "version": "v0.1.0"
+      ]
     }
-}}
+  ],
+  "summary": {
+    "phases": {
+      "total": 1,
+      "pending": 1,
+      "completed": 0,
+      "recently_completed": "",
+      "current_phase": ""
+    },
+    "milestones": {
+      "total": 2,
+      "pending": 2,
+      "completed": 0,
+      "recently_completed": "",
+      "current_milestone": ""
+    },
+    "tasks": {
+      "total": 2,
+      "pending": 2,
+      "completed": 0,
+      "recently_completed": "",
+      "current_task": ""
+    }
+  },
+  "metadata": {
+    "last_updated": "2025-12-20T20:58:55.504381+00:00",
+    "schema_version": "1.0.0"
+  }
+}
