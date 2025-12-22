@@ -1,13 +1,13 @@
 {
-    "session_id": "c30487a8-042c-4659-beb2-cfa45976eb1e",
-    "transcript_path": "/home/emhar/.claude/projects/-home-emhar-avaris-ai/c30487a8-042c-4659-beb2-cfa45976eb1e.jsonl",
+    "session_id": "ca56d202-898f-4734-8389-fb420d9f9c73",
+    "transcript_path": "/home/emhar/.claude/projects/-home-emhar-avaris-ai/ca56d202-898f-4734-8389-fb420d9f9c73.jsonl",
     "cwd": "/home/emhar/avaris-ai",
-    "permission_mode": "bypassPermissions",
+    "permission_mode": "default",
     "hook_event_name": "PreToolUse",
     "tool_name": "Skill",
     "tool_input": {
-        "skill": "test",
-        "args": "Test commit message"
+        "skill": "hooks-management",
+        "args": "Create a status logger hook that will change the task status of the roadmap in '/home/emhar/avaris-ai/project/{version}/release-plan/release-plan.md'.\n\n- Use the \"PreToolUse\" HookEvent with \"Skill\" Matcher.\n- The Skill Input has changed. Please check '/home/emhar/avaris-ai/pre_tool_test.log'. Now you must parse the tool_input.skill and .args.\n\n## Instructions\n\n- Parse the tool_input.skill and .args.\n- If \"skill\" is not log:task, then exit(0).\n- Validate the .args. If the .args is not a valid task id, then block the tool execution with Exit(2)\n- Retrieve the current task in @project/{version}/release-plan/roadmap.json\n- To get the version, retrieve it from the @project/product.json file.\n\nThe valid .args input is this : \"<task-id> <status>\"\nValid statuses are: completed, in_progress, blocked\nExample: \"T001 completed\"\n\nAlso you must validate if task-id exist in the roadmap.json and valid format (TNNN)"
     },
-    "tool_use_id": "toolu_01XEECM4PB1PXJU49UdQ9UCv"
+    "tool_use_id": "toolu_01RbaWa4ziuKmCRaoLZUyXWv"
 }
