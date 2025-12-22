@@ -2,7 +2,6 @@
 name: test
 description: Test the command
 allowed-tools: Bash(git add:*), Bash(git commit:*)
-argument-hint: [message]
 model: sonnet
 ---
 
