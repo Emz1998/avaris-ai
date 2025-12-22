@@ -186,6 +186,17 @@ def main() -> None:
         block_response(f"Failed to update task status for '{task_id}'")
 
     log(f"Task '{task_id}' status updated to '{status}'")
+
+    # Run auto-resolver to check for milestone/phase completion
+    import importlib.util
+    script_dir = Path(__file__).parent
+    spec = importlib.util.spec_from_file_location("auto_resolver", script_dir / "auto_resolver.py")
+    auto_resolver = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(auto_resolver)
+    success, resolutions = auto_resolver.run_auto_resolver()
+    for msg in resolutions:
+        log(msg)
+
     sys.exit(0)
 
 
