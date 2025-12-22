@@ -11,14 +11,14 @@
         "milestones": [
           {
             "id": "MS-001",
+            "feature": "F001",
             "name": "Environment Setup",
             "goal": "Next.js 15 + React 19 fully configured",
             "status": "not_started",
             "dependencies": [],
             "success_criteria": [
               {
-                "id": "SC-001",
-                "description": "npm run dev starts without errors",
+                "references": ["SC-001"],
                 "met": false
               }
             ],
@@ -32,8 +32,7 @@
                 "dependencies": [],
                 "acceptance_criteria": [
                   {
-                    "id": "AC-001",
-                    "description": "npm run dev starts without errors",
+                    "references": ["AC-001"],
                     "met": false
                   }
                 ]
@@ -48,8 +47,7 @@
             "dependencies": [],
             "success_criteria": [
               {
-                "id": "SC-002",
-                "description": "Core type contracts and validation schemas are defined",
+                "references": ["SC-002"],
                 "met": false
               }
             ],
@@ -63,8 +61,7 @@
                 "dependencies": [],
                 "acceptance_criteria": [
                   {
-                    "id": "AC-002",
-                    "description": "Core type contracts and validation schemas are defined",
+                    "references": ["AC-002"],
                     "met": false
                   }
                 ]

@@ -11,18 +11,19 @@ description: Creates and manages project roadmap.json files with phases, milesto
 
 ### Phase 1: Assessment
 
-1. Read `project/status.json` to get current version
-2. Construct target path: `project/v{version}/release-plan/roadmap.json`
+1. Read `project/product.json` to get current version
+2. Construct target path: `project/{version}/release-plan/roadmap.json`
 3. Check if roadmap.json exists (determines create vs update)
-4. Read `references/sample_data.json` for schema reference
+4. Read `.claude/skills/project-management/references/sample_data.json` and `.claude/skills/project-management/references/schema.md` for schema reference
 5. **Read specs for context** (required for create/add operations):
-   - `project/v{version}/specs/prd.md` - Product requirements, features, user stories
-   - `project/v{version}/specs/tech-specs.md` - Architecture, data models, APIs
-   - `project/v{version}/specs/ux.md` - UI components, user flows
+   - `project/{version}/specs/prd.md` - Product requirements, features, user stories
+   - `project/{version}/specs/tech-specs.md` - Architecture, data models, APIs
+   - `project/{version}/specs/ux.md` - UI components, user flows
 
 ### Phase 2: Operation Execution
 
 **Create roadmap:**
+
 - Analyze specs to derive phases, milestones, and tasks
 - Extract features from PRD → milestones with goals
 - Extract technical requirements from tech-specs → tasks with owners
@@ -33,17 +34,20 @@ description: Creates and manages project roadmap.json files with phases, milesto
 - Set metadata with current timestamp and schema_version "1.0.0"
 
 **Add phase:**
+
 - Generate next PH-ID (scan existing, increment max)
 - Create phase with empty milestones array
 - Append to phases array
 
 **Add milestone:**
+
 - Find target phase by PH-ID
 - Generate next MS-ID
 - Create milestone with empty tasks and success_criteria arrays
 - Append to phase.milestones
 
 **Add task:**
+
 - Find target milestone by MS-ID
 - Validate owner against `.claude/agents/engineers/` folder or "main-agent"
 - Generate next T-ID
@@ -51,11 +55,13 @@ description: Creates and manages project roadmap.json files with phases, milesto
 - Append to milestone.tasks
 
 **Update status:**
+
 - Find item by ID (PH-xxx, MS-xxx, or Txxx)
 - Update status field
 - Valid values: "not_started", "in_progress", "completed"
 
 **Mark criteria met:**
+
 - Find criteria by ID (SC-xxx or AC-xxx)
 - Set met to true
 
