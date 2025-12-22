@@ -1,0 +1,13 @@
+{
+    "session_id": "c30487a8-042c-4659-beb2-cfa45976eb1e",
+    "transcript_path": "/home/emhar/.claude/projects/-home-emhar-avaris-ai/c30487a8-042c-4659-beb2-cfa45976eb1e.jsonl",
+    "cwd": "/home/emhar/avaris-ai",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Skill",
+    "tool_input": {
+        "skill": "test",
+        "args": "Test commit message"
+    },
+    "tool_use_id": "toolu_01XEECM4PB1PXJU49UdQ9UCv"
+}
