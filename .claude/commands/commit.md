@@ -1,6 +1,6 @@
 ---
-name: test
-description: Test the command
+name: commit
+description: Commit the changes to the remote repository
 allowed-tools: Bash(git add:*), Bash(git commit:*)
 model: sonnet
 ---
