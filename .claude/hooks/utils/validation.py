@@ -6,6 +6,8 @@ PATTERNS = {
     "milestone": r"MS-(\d{3})",
     "milestone_strict": r"^MS-\d{3}$",
     "task_strict": r"^T\d{3}$",
+    "ac_strict": r"^AC-\d{3}$",
+    "sc_strict": r"^SC-\d{3}$",
 }
 
 
@@ -33,3 +35,13 @@ def validate_milestone(milestone: str) -> None:
 def validate_task(task: str) -> None:
     """Validate task format (TXXX)."""
     validate_format(task, PATTERNS["task_strict"], "task", "TXXX (e.g., T001)")
+
+
+def validate_ac(ac_id: str) -> None:
+    """Validate acceptance criteria format (AC-XXX)."""
+    validate_format(ac_id, PATTERNS["ac_strict"], "AC ID", "AC-XXX (e.g., AC-001)")
+
+
+def validate_sc(sc_id: str) -> None:
+    """Validate success criteria format (SC-XXX)."""
+    validate_format(sc_id, PATTERNS["sc_strict"], "SC ID", "SC-XXX (e.g., SC-001)")

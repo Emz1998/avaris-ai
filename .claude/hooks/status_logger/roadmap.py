@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-# Auto Resolver for Milestones and Phases
-# Automatically resolves milestones when all tasks are completed,
-# and phases when all milestones are completed.
+# Roadmap utilities for status loggers
 
 import json
 import os
@@ -50,7 +48,7 @@ def load_roadmap(roadmap_path: Path) -> dict | None:
 
 
 def save_roadmap(roadmap_path: Path, roadmap: dict) -> bool:
-    """Save roadmap.json file."""
+    """Save roadmap.json file with updated timestamp."""
     try:
         roadmap["metadata"]["last_updated"] = datetime.now(timezone.utc).isoformat()
         with open(roadmap_path, "w") as f:
@@ -58,6 +56,85 @@ def save_roadmap(roadmap_path: Path, roadmap: dict) -> bool:
         return True
     except IOError:
         return False
+
+
+def find_task_in_roadmap(
+    roadmap: dict, task_id: str
+) -> tuple[dict | None, dict | None, dict | None]:
+    """Find task in roadmap. Returns (phase, milestone, task) or (None, None, None)."""
+    phases = roadmap.get("phases", [])
+    for phase in phases:
+        milestones = phase.get("milestones", [])
+        for milestone in milestones:
+            tasks = milestone.get("tasks", [])
+            for task in tasks:
+                if task.get("id") == task_id:
+                    return phase, milestone, task
+    return None, None, None
+
+
+def find_ac_in_roadmap(roadmap: dict, ac_id: str) -> tuple[dict | None, dict | None]:
+    """Find acceptance criteria in roadmap. Returns (task, ac_entry) or (None, None)."""
+    phases = roadmap.get("phases", [])
+    for phase in phases:
+        milestones = phase.get("milestones", [])
+        for milestone in milestones:
+            tasks = milestone.get("tasks", [])
+            for task in tasks:
+                acceptance_criteria = task.get("acceptance_criteria", [])
+                for ac in acceptance_criteria:
+                    id_reference = ac.get("id_reference", "")
+                    if ac_id == id_reference:
+                        return task, ac
+    return None, None
+
+
+def find_sc_in_roadmap(roadmap: dict, sc_id: str) -> tuple[dict | None, dict | None]:
+    """Find success criteria in roadmap. Returns (milestone, sc_entry) or (None, None)."""
+    phases = roadmap.get("phases", [])
+    for phase in phases:
+        milestones = phase.get("milestones", [])
+        for milestone in milestones:
+            success_criteria = milestone.get("success_criteria", [])
+            for sc in success_criteria:
+                id_reference = sc.get("id_reference", "")
+                if sc_id == id_reference:
+                    return milestone, sc
+    return None, None
+
+
+def get_unmet_acs(task: dict) -> list[str]:
+    """Get list of unmet acceptance criteria IDs for a task."""
+    unmet = []
+    for ac in task.get("acceptance_criteria", []):
+        if ac.get("status") != "met":
+            unmet.append(ac.get("id_reference", "unknown"))
+    return unmet
+
+
+def get_unmet_scs(milestone: dict) -> list[str]:
+    """Get list of unmet success criteria IDs for a milestone."""
+    unmet = []
+    for sc in milestone.get("success_criteria", []):
+        if sc.get("status") != "met":
+            unmet.append(sc.get("id_reference", "unknown"))
+    return unmet
+
+
+def all_acs_met(task: dict) -> bool:
+    """Check if all acceptance criteria for a task are met."""
+    acs = task.get("acceptance_criteria", [])
+    if not acs:
+        return True
+    return all(ac.get("status") == "met" for ac in acs)
+
+
+def all_scs_met(milestone: dict) -> bool:
+    """Check if all success criteria for a milestone are met."""
+    scs = milestone.get("success_criteria", [])
+    if not scs:
+        return True
+    return all(sc.get("status") == "met" for sc in scs)
 
 
 def all_tasks_completed(milestone: dict) -> bool:
@@ -77,36 +154,44 @@ def all_milestones_completed(phase: dict) -> bool:
 
 
 def resolve_milestones_and_phases(roadmap: dict) -> list[str]:
-    """
-    Auto-resolve milestones and phases based on their children's status.
-    Also reverts completed status if children are no longer all completed.
-    Returns list of resolution messages.
-    """
+    """Auto-resolve milestones and phases based on their children's status."""
     resolutions = []
     phases = roadmap.get("phases", [])
 
     for phase in phases:
         milestones = phase.get("milestones", [])
 
-        # Check each milestone for completion or reversion
         for milestone in milestones:
             current_status = milestone.get("status")
             tasks_completed = all_tasks_completed(milestone)
+            scs_met = all_scs_met(milestone)
 
             if current_status != "completed" and tasks_completed:
-                milestone["status"] = "completed"
-                resolutions.append(f"Milestone '{milestone.get('id')}' auto-resolved to 'completed'")
+                if not scs_met:
+                    unmet = get_unmet_scs(milestone)
+                    resolutions.append(
+                        f"Milestone '{milestone.get('id')}' cannot be completed. "
+                        f"Unmet success criteria: {', '.join(unmet)}"
+                    )
+                else:
+                    milestone["status"] = "completed"
+                    resolutions.append(
+                        f"Milestone '{milestone.get('id')}' auto-resolved to 'completed'"
+                    )
             elif current_status == "completed" and not tasks_completed:
                 milestone["status"] = "in_progress"
-                resolutions.append(f"Milestone '{milestone.get('id')}' reverted to 'in_progress'")
+                resolutions.append(
+                    f"Milestone '{milestone.get('id')}' reverted to 'in_progress'"
+                )
 
-        # Check the phase for completion or reversion
         current_phase_status = phase.get("status")
         milestones_completed = all_milestones_completed(phase)
 
         if current_phase_status != "completed" and milestones_completed:
             phase["status"] = "completed"
-            resolutions.append(f"Phase '{phase.get('id')}' auto-resolved to 'completed'")
+            resolutions.append(
+                f"Phase '{phase.get('id')}' auto-resolved to 'completed'"
+            )
         elif current_phase_status == "completed" and not milestones_completed:
             phase["status"] = "in_progress"
             resolutions.append(f"Phase '{phase.get('id')}' reverted to 'in_progress'")
@@ -114,16 +199,12 @@ def resolve_milestones_and_phases(roadmap: dict) -> list[str]:
     return resolutions
 
 
-def update_current(roadmap: dict) -> str | None:
-    """
-    Update the 'current' section to point to the next pending task.
-    Returns a message if current was updated, None otherwise.
-    """
+def update_current_pointer(roadmap: dict) -> str | None:
+    """Update the 'current' section to point to the next pending task."""
     phases = roadmap.get("phases", [])
     current = roadmap.get("current", {})
     old_current = (current.get("phase"), current.get("milestone"), current.get("task"))
 
-    # Find first non-completed phase, milestone, and task
     new_phase_id = None
     new_milestone_id = None
     new_task_id = None
@@ -155,7 +236,6 @@ def update_current(roadmap: dict) -> str | None:
         if new_milestone_id:
             break
 
-    # If all completed, keep pointing to the last items
     if not new_phase_id and phases:
         last_phase = phases[-1]
         new_phase_id = last_phase.get("id")
@@ -173,7 +253,7 @@ def update_current(roadmap: dict) -> str | None:
         roadmap["current"] = {
             "phase": new_phase_id,
             "milestone": new_milestone_id,
-            "task": new_task_id
+            "task": new_task_id,
         }
         return f"Current updated: phase={new_phase_id}, milestone={new_milestone_id}, task={new_task_id}"
 
@@ -196,7 +276,9 @@ def update_summary(roadmap: dict) -> None:
     for phase in phases:
         milestones = phase.get("milestones", [])
         milestone_total += len(milestones)
-        milestone_completed += sum(1 for m in milestones if m.get("status") == "completed")
+        milestone_completed += sum(
+            1 for m in milestones if m.get("status") == "completed"
+        )
 
         for milestone in milestones:
             tasks = milestone.get("tasks", [])
@@ -206,27 +288,24 @@ def update_summary(roadmap: dict) -> None:
     summary["phases"] = {
         "total": phase_total,
         "pending": phase_total - phase_completed,
-        "completed": phase_completed
+        "completed": phase_completed,
     }
     summary["milestones"] = {
         "total": milestone_total,
         "pending": milestone_total - milestone_completed,
-        "completed": milestone_completed
+        "completed": milestone_completed,
     }
     summary["tasks"] = {
         "total": task_total,
         "pending": task_total - task_completed,
-        "completed": task_completed
+        "completed": task_completed,
     }
 
     roadmap["summary"] = summary
 
 
 def run_auto_resolver() -> tuple[bool, list[str]]:
-    """
-    Main function to run the auto-resolver.
-    Returns (success, list of resolution messages).
-    """
+    """Run the auto-resolver for milestones and phases."""
     version = get_current_version()
     if not version:
         return False, ["Could not retrieve current_version from product.json"]
@@ -238,25 +317,12 @@ def run_auto_resolver() -> tuple[bool, list[str]]:
 
     resolutions = resolve_milestones_and_phases(roadmap)
 
-    # Update current pointer to next pending task
-    current_msg = update_current(roadmap)
+    current_msg = update_current_pointer(roadmap)
     if current_msg:
         resolutions.append(current_msg)
 
-    # Always update summary to ensure counts are accurate
     update_summary(roadmap)
     if not save_roadmap(roadmap_path, roadmap):
         return False, ["Failed to save roadmap after auto-resolution"]
 
     return True, resolutions
-
-
-if __name__ == "__main__":
-    import sys
-
-    success, messages = run_auto_resolver()
-
-    for msg in messages:
-        print(msg, file=sys.stderr)
-
-    sys.exit(0 if success else 1)

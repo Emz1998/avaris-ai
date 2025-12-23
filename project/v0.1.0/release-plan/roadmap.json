@@ -14,46 +14,44 @@
           "feature": "F001",
           "name": "Environment Setup",
           "goal": "Next.js 15 + React 19 fully configured",
-          "status": "in_progress",
+          "status": "completed",
           "dependencies": [],
           "success_criteria": [
             {
-              "references": [
-                "SC-001"
-              ],
-              "met": false
+              "id_reference": "SC-001",
+              "status": "met"
             }
           ],
           "tasks": [
             {
               "id": "T001",
               "description": "Initialize Next.js 15.1 project",
-              "status": "in_progress",
+              "status": "completed",
               "parallel": false,
               "owner": "fullstack-developer",
               "dependencies": [],
               "acceptance_criteria": [
                 {
-                  "references": [
-                    "AC-001"
-                  ],
-                  "met": false
+                  "id_reference": "AC-001",
+                  "status": "met"
+                },
+                {
+                  "id_reference": "AC-002",
+                  "status": "met"
                 }
               ]
             },
             {
               "id": "T002",
               "description": "Create TypeScript interfaces for core data structures",
-              "status": "in_progress",
+              "status": "completed",
               "parallel": false,
               "owner": "fullstack-developer",
               "dependencies": [],
               "acceptance_criteria": [
                 {
-                  "references": [
-                    "AC-002"
-                  ],
-                  "met": false
+                  "id_reference": "AC-003",
+                  "status": "met"
                 }
               ]
             }
@@ -67,10 +65,8 @@
           "dependencies": [],
           "success_criteria": [
             {
-              "references": [
-                "SC-002"
-              ],
-              "met": false
+              "id_reference": "SC-002",
+              "status": "unmet"
             }
           ],
           "tasks": [
@@ -83,10 +79,8 @@
               "dependencies": [],
               "acceptance_criteria": [
                 {
-                  "references": [
-                    "AC-002"
-                  ],
-                  "met": false
+                  "id_reference": "AC-004",
+                  "status": "met"
                 }
               ]
             },
@@ -99,10 +93,8 @@
               "dependencies": [],
               "acceptance_criteria": [
                 {
-                  "references": [
-                    "AC-002"
-                  ],
-                  "met": false
+                  "id_reference": "AC-005",
+                  "status": "met"
                 }
               ]
             }
@@ -122,10 +114,8 @@
           "dependencies": [],
           "success_criteria": [
             {
-              "references": [
-                "SC-002"
-              ],
-              "met": false
+              "id_reference": "SC-002",
+              "status": "met"
             }
           ],
           "tasks": [
@@ -138,10 +128,8 @@
               "dependencies": [],
               "acceptance_criteria": [
                 {
-                  "references": [
-                    "AC-002"
-                  ],
-                  "met": false
+                  "id_reference": "AC-006",
+                  "status": "met"
                 }
               ]
             }
@@ -152,8 +140,8 @@
   ],
   "current": {
     "phase": "PH-001",
-    "milestone": "MS-001",
-    "task": "T001"
+    "milestone": "MS-002",
+    "task": "T003"
   },
   "summary": {
     "phases": {
@@ -163,17 +151,17 @@
     },
     "milestones": {
       "total": 3,
-      "pending": 3,
-      "completed": 0
+      "pending": 2,
+      "completed": 1
     },
     "tasks": {
       "total": 5,
-      "pending": 5,
-      "completed": 0
+      "pending": 3,
+      "completed": 2
     }
   },
   "metadata": {
-    "last_updated": "2025-12-22T07:12:32.887202+00:00",
+    "last_updated": "2025-12-22T20:53:34.869592+00:00",
     "schema_version": "1.0.0"
   }
 }

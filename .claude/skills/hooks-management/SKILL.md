@@ -10,6 +10,7 @@ description: Use PROACTIVELY when you need to create, update, configure, or vali
 - Read hook documentation from `.claude/skills/hooks-management/references/hooks.md`
 - Read hook input patterns from `.claude/skills/hooks-management/references/input-patterns.md`
 - Review existing hooks in `.claude/hooks/` and settings in `.claude/settings.local.json`
+- Check available utilities in `.claude/hooks/utils`
 - Create or update the hook script following the input patterns
 - Troubleshoot the hook script if needed
 - Verify hook execution using `echo` to pipe JSON input
