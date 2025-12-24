@@ -5,8 +5,18 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from utils import get_cache, set_cache, extract_slash_command_name, read_stdin_json  # type: ignore
-from scripts.validate_work import track_phases  # type: ignore
+
+from utils import get_cache, set_cache, extract_slash_command_name, read_stdin_json, load_cache, write_cache
+
+
+def track_phases(phase: str) -> None:
+    """Track completed phases in cache."""
+    cache = load_cache()
+    phases_completed = cache.get("phases_completed", [])
+    if phase and phase not in phases_completed:
+        phases_completed.append(phase)
+        cache["phases_completed"] = phases_completed
+        write_cache(cache)
 
 DEFAULT_PHASES = [
     "log:task",
@@ -16,7 +26,6 @@ DEFAULT_PHASES = [
     "code",
     "code-review",
     "commit",
-    "log:task",
 ]
 
 
@@ -38,9 +47,14 @@ def is_valid_phase_transition(
     """Check if transition to next phase is valid."""
     current_phase = get_cache("current_phase") or "initial"
 
+    # Handle unknown phase
     if next_phase not in all_phases:
         print(get_transition_message("unknown"), file=sys.stderr)
         return False
+
+    # Handle initial state - allow any valid phase
+    if current_phase == "initial" or current_phase not in all_phases:
+        return True
 
     current_idx = all_phases.index(current_phase)
     next_idx = all_phases.index(next_phase)
@@ -75,8 +89,17 @@ def validate_phase_transition(hook_input: dict) -> None:
     if tool_name != "SlashCommand" and not prompt.startswith("/"):
         sys.exit(0)
 
-    command = tool_input.get("command", "") if tool_input else prompt
+    # Extract command from tool input or prompt
+    command = ""
+    if isinstance(tool_input, dict):
+        command = tool_input.get("command", "")
+    if not command and prompt:
+        command = prompt
+
     next_phase = extract_slash_command_name(command)
+
+    if not next_phase:
+        sys.exit(0)
 
     if not is_valid_phase_transition(next_phase):
         sys.exit(2)
@@ -88,6 +111,7 @@ def validate_phase_transition(hook_input: dict) -> None:
 
 
 def main() -> None:
+    """Entry point."""
     hook_input = read_stdin_json()
     validate_phase_transition(hook_input)
 
