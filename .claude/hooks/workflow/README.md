@@ -31,6 +31,13 @@ Hook scripts for enforcing workflow phases and subagent ordering in the implemen
 - Injects project status context into session
 - Reads from `project/status.json`
 
+**stop_guard.py**
+
+- Hook Event: `Stop`
+- Blocks stoppage when tasks are in progress or incomplete
+- Checks roadmap for task statuses
+- Uses `continue: true` to allow stop, `decision: block` to prevent
+
 **reset_cache.py**
 
 - Utility script (not a hook)

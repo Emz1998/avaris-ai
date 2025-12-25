@@ -6,7 +6,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from utils import add_context, get_status, read_stdin_json, set_status
+from utils import add_context, get_status, read_stdin_json, set_status  # type: ignore
 
 
 def build_context_string(session_id: str) -> str:

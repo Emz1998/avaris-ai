@@ -6,7 +6,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from utils import read_stdin_json, get_cache, set_cache
+from utils import read_stdin_json, get_cache, set_cache  # type: ignore
 
 
 # Phase to allowed subagents mapping
@@ -15,7 +15,13 @@ PHASE_SUBAGENTS = {
     "research": ["research-specialist", "research-consultant"],
     "plan": ["planning-specialist"],
     "plan:consult": ["plan-consultant"],
-    "code": ["test-engineer", "version-manager", "fullstack-developer", "code-reviewer", "version-manager"],
+    "code": [
+        "test-engineer",
+        "version-manager",
+        "fullstack-developer",
+        "code-reviewer",
+        "version-manager",
+    ],
     "commit": ["version-manager"],
 }
 
@@ -65,9 +71,15 @@ def validate_ordered_phase(subagent: str, phase: str) -> tuple[bool, str]:
     # Check if subagent matches expected
     if subagent == expected:
         set_cache("code_phase_position", current_position + 1)
-        return True, f"Proceeding to '{subagent}' (step {current_position + 1}/{len(sequence)})"
+        return (
+            True,
+            f"Proceeding to '{subagent}' (step {current_position + 1}/{len(sequence)})",
+        )
 
-    return False, f"Expected '{expected}' at step {current_position + 1}, got '{subagent}'"
+    return (
+        False,
+        f"Expected '{expected}' at step {current_position + 1}, got '{subagent}'",
+    )
 
 
 def validate_subagent_by_phase() -> None:

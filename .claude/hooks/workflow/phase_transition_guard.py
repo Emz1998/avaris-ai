@@ -6,7 +6,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from utils import get_cache, set_cache, extract_slash_command_name, read_stdin_json, load_cache, write_cache
+from utils import (  # type: ignore[import-not-found]
+    get_cache,
+    set_cache,
+    extract_slash_command_name,
+    read_stdin_json,
+    load_cache,
+    write_cache,
+)
 
 
 def track_phases(phase: str) -> None:
@@ -17,6 +24,7 @@ def track_phases(phase: str) -> None:
         phases_completed.append(phase)
         cache["phases_completed"] = phases_completed
         write_cache(cache)
+
 
 DEFAULT_PHASES = [
     "log:task",

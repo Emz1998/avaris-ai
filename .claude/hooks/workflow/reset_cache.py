@@ -6,7 +6,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from utils import set_cache, load_cache, write_cache
+from utils import set_cache, load_cache, write_cache  # type: ignore
 
 
 DEFAULT_CACHE_STATE = {

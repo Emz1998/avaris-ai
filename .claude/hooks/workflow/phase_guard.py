@@ -6,7 +6,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from utils import get_cache, block_response, read_stdin_json
+from utils import get_cache, block_response, read_stdin_json  # type: ignore
 
 
 def get_valid_file_names(session_id: str) -> dict[str, str]:
@@ -84,7 +84,9 @@ def setup_phase_guard() -> None:
 
         # Get file path and command from tool input
         tool_input = hook_input.get("tool_input", {})
-        file_path = tool_input.get("file_path", "") if isinstance(tool_input, dict) else ""
+        file_path = (
+            tool_input.get("file_path", "") if isinstance(tool_input, dict) else ""
+        )
         command = tool_input.get("command", "") if isinstance(tool_input, dict) else ""
 
         # Get valid file names and reasons
