@@ -12,5 +12,6 @@
     "reason": "Phase transition allowed"
   },
   "retrigger_flag": 0,
-  "active_subagent": ""
+  "active_subagent": "",
+  "code_phase_position": 0
 }

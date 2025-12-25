@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from utils.output import log, block_response
 from utils.validation import validate_task, InvalidFormatError
-from status_logger.roadmap import (
+from utils.roadmap import (
     get_current_version,
     get_roadmap_path,
     load_roadmap,
@@ -17,6 +17,8 @@ from status_logger.roadmap import (
     run_auto_resolver,
     all_acs_met,
     get_unmet_acs,
+    get_incomplete_task_deps,
+    get_incomplete_milestone_deps,
 )
 
 VALID_STATUSES = ["completed", "in_progress", "blocked"]
@@ -78,6 +80,26 @@ def process(args: str) -> None:
     phase, milestone, task = find_task_in_roadmap(roadmap, task_id)
     if task is None:
         block_response(f"Task '{task_id}' not found in roadmap")
+
+    # Check dependencies before allowing in_progress
+    if status == "in_progress":
+        # Check milestone dependencies first
+        incomplete_ms_deps = get_incomplete_milestone_deps(roadmap, milestone)
+        if incomplete_ms_deps:
+            block_response(
+                f"Cannot start task '{task_id}'. "
+                f"Milestone '{milestone.get('id')}' has incomplete dependencies: "
+                f"{', '.join(incomplete_ms_deps)}. Complete them first."
+            )
+
+        # Check task dependencies
+        incomplete_task_deps = get_incomplete_task_deps(roadmap, task)
+        if incomplete_task_deps:
+            block_response(
+                f"Cannot start task '{task_id}'. "
+                f"Incomplete task dependencies: {', '.join(incomplete_task_deps)}. "
+                f"Complete them first."
+            )
 
     if status == "completed" and not all_acs_met(task):
         unmet = get_unmet_acs(task)

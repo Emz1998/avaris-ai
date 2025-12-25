@@ -5,29 +5,34 @@ Hook scripts for enforcing workflow phases and subagent ordering in the implemen
 ## Files
 
 **phase_guard.py**
+
 - Hook Event: `PreToolUse`
 - Matcher: `Write|Bash`
 - Blocks tool usage based on current workflow phase
 - Prevents coding in explore/research phases, commits before code phase
 
 **phase_transition_guard.py**
+
 - Hook Event: `PreToolUse`, `UserPromptSubmit`
 - Matcher: `SlashCommand`
 - Validates phase transitions (no rollbacks, no skipping)
 - Tracks completed phases in cache
 
 **subagent_order_validation.py**
+
 - Hook Event: `PreToolUse`
 - Matcher: `Task`
 - Enforces sequential subagent invocation order
 - Blocks backwards transitions and skipping
 
 **context_injector.py**
+
 - Hook Event: `SessionStart`
 - Injects project status context into session
 - Reads from `project/status.json`
 
 **reset_cache.py**
+
 - Utility script (not a hook)
 - Resets workflow cache to default state
 - Run manually: `python3 reset_cache.py`

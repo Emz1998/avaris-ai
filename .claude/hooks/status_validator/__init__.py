@@ -1,1 +1,0 @@
-# Status validator hook module

@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from utils.output import log, block_response
 from utils.validation import validate_ac, InvalidFormatError
-from status_logger.roadmap import (
+from utils.roadmap import (
     get_current_version,
     get_roadmap_path,
     load_roadmap,

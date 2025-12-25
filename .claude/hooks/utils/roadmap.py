@@ -103,6 +103,39 @@ def find_sc_in_roadmap(roadmap: dict, sc_id: str) -> tuple[dict | None, dict | N
     return None, None
 
 
+def find_milestone_in_roadmap(
+    roadmap: dict, milestone_id: str
+) -> tuple[dict | None, dict | None]:
+    """Find milestone in roadmap. Returns (phase, milestone) or (None, None)."""
+    phases = roadmap.get("phases", [])
+    for phase in phases:
+        milestones = phase.get("milestones", [])
+        for milestone in milestones:
+            if milestone.get("id") == milestone_id:
+                return phase, milestone
+    return None, None
+
+
+def get_incomplete_task_deps(roadmap: dict, task: dict) -> list[str]:
+    """Get list of incomplete dependency IDs for a task."""
+    incomplete = []
+    for dep_id in task.get("dependencies", []):
+        _, _, dep_task = find_task_in_roadmap(roadmap, dep_id)
+        if dep_task and dep_task.get("status") != "completed":
+            incomplete.append(dep_id)
+    return incomplete
+
+
+def get_incomplete_milestone_deps(roadmap: dict, milestone: dict) -> list[str]:
+    """Get list of incomplete dependency IDs for a milestone."""
+    incomplete = []
+    for dep_id in milestone.get("dependencies", []):
+        _, dep_milestone = find_milestone_in_roadmap(roadmap, dep_id)
+        if dep_milestone and dep_milestone.get("status") != "completed":
+            incomplete.append(dep_id)
+    return incomplete
+
+
 def get_unmet_acs(task: dict) -> list[str]:
     """Get list of unmet acceptance criteria IDs for a task."""
     unmet = []
@@ -145,12 +178,24 @@ def all_tasks_completed(milestone: dict) -> bool:
     return all(task.get("status") == "completed" for task in tasks)
 
 
+def any_task_in_progress(milestone: dict) -> bool:
+    """Check if any task in a milestone is in_progress."""
+    tasks = milestone.get("tasks", [])
+    return any(task.get("status") == "in_progress" for task in tasks)
+
+
 def all_milestones_completed(phase: dict) -> bool:
     """Check if all milestones in a phase are completed."""
     milestones = phase.get("milestones", [])
     if not milestones:
         return False
     return all(ms.get("status") == "completed" for ms in milestones)
+
+
+def any_milestone_in_progress(phase: dict) -> bool:
+    """Check if any milestone in a phase is in_progress."""
+    milestones = phase.get("milestones", [])
+    return any(ms.get("status") == "in_progress" for ms in milestones)
 
 
 def resolve_milestones_and_phases(roadmap: dict) -> list[str]:
@@ -165,8 +210,16 @@ def resolve_milestones_and_phases(roadmap: dict) -> list[str]:
             current_status = milestone.get("status")
             tasks_completed = all_tasks_completed(milestone)
             scs_met = all_scs_met(milestone)
+            has_task_in_progress = any_task_in_progress(milestone)
 
-            if current_status != "completed" and tasks_completed:
+            # Auto-progress: pending -> in_progress when task starts
+            if current_status in ("pending", "not_started") and has_task_in_progress:
+                milestone["status"] = "in_progress"
+                resolutions.append(
+                    f"Milestone '{milestone.get('id')}' auto-progressed to 'in_progress'"
+                )
+            # Auto-complete when all tasks done
+            elif current_status != "completed" and tasks_completed:
                 if not scs_met:
                     unmet = get_unmet_scs(milestone)
                     resolutions.append(
@@ -178,6 +231,7 @@ def resolve_milestones_and_phases(roadmap: dict) -> list[str]:
                     resolutions.append(
                         f"Milestone '{milestone.get('id')}' auto-resolved to 'completed'"
                     )
+            # Revert if completed but tasks not done
             elif current_status == "completed" and not tasks_completed:
                 milestone["status"] = "in_progress"
                 resolutions.append(
@@ -186,12 +240,21 @@ def resolve_milestones_and_phases(roadmap: dict) -> list[str]:
 
         current_phase_status = phase.get("status")
         milestones_completed = all_milestones_completed(phase)
+        has_milestone_in_progress = any_milestone_in_progress(phase)
 
-        if current_phase_status != "completed" and milestones_completed:
+        # Auto-progress: pending -> in_progress when milestone starts
+        if current_phase_status in ("pending", "not_started") and has_milestone_in_progress:
+            phase["status"] = "in_progress"
+            resolutions.append(
+                f"Phase '{phase.get('id')}' auto-progressed to 'in_progress'"
+            )
+        # Auto-complete when all milestones done
+        elif current_phase_status != "completed" and milestones_completed:
             phase["status"] = "completed"
             resolutions.append(
                 f"Phase '{phase.get('id')}' auto-resolved to 'completed'"
             )
+        # Revert if completed but milestones not done
         elif current_phase_status == "completed" and not milestones_completed:
             phase["status"] = "in_progress"
             resolutions.append(f"Phase '{phase.get('id')}' reverted to 'in_progress'")

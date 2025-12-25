@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate subagent invocation order in workflow."""
+"""Validate subagent invocation based on current phase."""
 
 import sys
 from pathlib import Path
@@ -9,68 +9,69 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from utils import read_stdin_json, get_cache, set_cache
 
 
-DEFAULT_SUBAGENTS = [
-    "codebase-explorer",
-    "research-specialist",
-    "research-consultant",
-    "strategic-planner",
-    "plan-consultant",
-    "test-manager",
-    "code-reviewer",
-    "code-specialist",
-    "version-manager",
-]
+# Phase to allowed subagents mapping
+PHASE_SUBAGENTS = {
+    "explore": ["codebase-explorer"],
+    "research": ["research-specialist", "research-consultant"],
+    "plan": ["planning-specialist"],
+    "plan:consult": ["plan-consultant"],
+    "code": ["test-engineer", "version-manager", "fullstack-developer", "code-reviewer", "version-manager"],
+    "commit": ["version-manager"],
+}
+
+# Ordered phases - subagents must be triggered in sequence
+ORDERED_PHASES = ["code"]
 
 
-def get_validation_messages(next_subagent: str) -> dict[str, str]:
-    """Get validation messages for subagent transitions."""
-    return {
-        "unknown": f"Unknown subagent: {next_subagent}",
-        "allow": f"You can proceed to the next subagent: {next_subagent}.",
-        "rollback": f"Cannot call back the previous subagent: {next_subagent}.",
-        "skip": "Cannot skip subagent(s): ",
-    }
+def get_allowed_subagents(phase: str) -> list[str]:
+    """Get list of allowed subagents for a phase (unique values)."""
+    return list(set(PHASE_SUBAGENTS.get(phase, [])))
 
 
-def is_next_subagent_valid(
-    next_subagent: str,
-    all_subagents: list[str] = DEFAULT_SUBAGENTS,
-) -> bool:
-    """Check if transition to next subagent is valid."""
-    current_subagent = get_cache("current_subagent")
-    messages = get_validation_messages(next_subagent)
-
-    # Check if subagent is in allowed list
-    if next_subagent not in all_subagents:
-        print(messages["unknown"], file=sys.stderr)
-        return False
-
-    # Allow if nothing triggered yet
-    if not current_subagent or current_subagent not in all_subagents:
-        print(messages["allow"])
-        return True
-
-    current_idx = all_subagents.index(current_subagent)
-    next_idx = all_subagents.index(next_subagent)
-
-    # Allow same or next in sequence
-    if next_idx in (current_idx, current_idx + 1):
-        print(messages["allow"])
-        return True
-
-    # Block backwards
-    if next_idx < current_idx:
-        print(messages["rollback"], file=sys.stderr)
-        return False
-
-    # Block skipping
-    skipped = all_subagents[current_idx + 1 : next_idx]
-    print(messages["skip"] + ", ".join(skipped), file=sys.stderr)
-    return False
+def get_phase_sequence(phase: str) -> list[str]:
+    """Get the ordered sequence for a phase."""
+    return PHASE_SUBAGENTS.get(phase, [])
 
 
-def validate_subagent_order() -> None:
-    """Main subagent order validation."""
+def get_all_known_subagents() -> list[str]:
+    """Get all known subagents across all phases."""
+    all_subagents = []
+    for subagents in PHASE_SUBAGENTS.values():
+        all_subagents.extend(subagents)
+    return list(set(all_subagents))
+
+
+def is_subagent_allowed_for_phase(subagent: str, phase: str) -> bool:
+    """Check if subagent is allowed for the current phase."""
+    allowed = get_allowed_subagents(phase)
+    return subagent in allowed
+
+
+def validate_ordered_phase(subagent: str, phase: str) -> tuple[bool, str]:
+    """Validate subagent order within an ordered phase using position tracking."""
+    sequence = get_phase_sequence(phase)
+    current_position = get_cache("code_phase_position") or 0
+
+    # Check if subagent matches expected position
+    if current_position >= len(sequence):
+        return False, f"Phase '{phase}' sequence already completed"
+
+    expected = sequence[current_position]
+
+    # Allow retry of current position
+    if current_position > 0 and subagent == sequence[current_position - 1]:
+        return True, f"Retrying '{subagent}' at position {current_position}"
+
+    # Check if subagent matches expected
+    if subagent == expected:
+        set_cache("code_phase_position", current_position + 1)
+        return True, f"Proceeding to '{subagent}' (step {current_position + 1}/{len(sequence)})"
+
+    return False, f"Expected '{expected}' at step {current_position + 1}, got '{subagent}'"
+
+
+def validate_subagent_by_phase() -> None:
+    """Main subagent phase validation."""
     try:
         hook_input = read_stdin_json()
         tool_input = hook_input.get("tool_input", {})
@@ -84,11 +85,42 @@ def validate_subagent_order() -> None:
         if not next_subagent:
             sys.exit(0)
 
-        if not is_next_subagent_valid(next_subagent):
+        # Get current phase from cache
+        current_phase = get_cache("current_phase")
+
+        if not current_phase:
+            print("No phase set. Allowing subagent.", file=sys.stderr)
+            sys.exit(0)
+
+        # Check if subagent is known
+        all_known = get_all_known_subagents()
+        if next_subagent not in all_known:
+            print(f"Unknown subagent: {next_subagent}. Allowing.", file=sys.stderr)
+            sys.exit(0)
+
+        # Validate subagent against current phase
+        if not is_subagent_allowed_for_phase(next_subagent, current_phase):
+            allowed = get_allowed_subagents(current_phase)
+            allowed_str = ", ".join(allowed) if allowed else "none"
+            print(
+                f"Subagent '{next_subagent}' not allowed in phase '{current_phase}'. "
+                f"Allowed: {allowed_str}",
+                file=sys.stderr,
+            )
             sys.exit(2)
 
+        # For ordered phases, validate sequence
+        if current_phase in ORDERED_PHASES:
+            is_valid, message = validate_ordered_phase(next_subagent, current_phase)
+            if not is_valid:
+                print(message, file=sys.stderr)
+                sys.exit(2)
+            print(message)
+        else:
+            print(f"Subagent '{next_subagent}' allowed for phase '{current_phase}'")
+
+        # Update current subagent in cache
         set_cache("current_subagent", next_subagent)
-        print(f"Current Subagent set to {next_subagent}")
         sys.exit(0)
 
     except Exception as e:
@@ -97,4 +129,4 @@ def validate_subagent_order() -> None:
 
 
 if __name__ == "__main__":
-    validate_subagent_order()
+    validate_subagent_by_phase()
