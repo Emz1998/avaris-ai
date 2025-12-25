@@ -6,7 +6,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from utils import get_cache, block_response, read_stdin_json  # type: ignore
+from utils import (
+    get_cache,
+    block_response,
+    read_stdin_json,
+    block_coding,
+    block_commit,
+    block_file_pattern,
+)
 
 
 def get_valid_file_names(session_id: str) -> dict[str, str]:
@@ -27,42 +34,6 @@ def get_default_reasons(current_phase: str) -> dict[str, str]:
         "commit": f"You are not allowed to commit code in {current_phase} phase.",
         "explore": f"You are not allowed to explore in {current_phase} phase.",
     }
-
-
-def is_code_file(file_path: str) -> bool:
-    """Check if file is a code file."""
-    code_extensions = (".ts", ".tsx", ".js", ".jsx", ".json", ".css", ".html", ".py")
-    return file_path.endswith(code_extensions)
-
-
-def block_coding(file_path: str, reason: str) -> None:
-    """Block coding operations on code files."""
-    if is_code_file(file_path):
-        block_response(reason)
-
-
-def block_planning(file_path: str, valid_name: str, reason: str) -> None:
-    """Block planning file operations."""
-    if valid_name in file_path:
-        block_response(reason)
-
-
-def block_research(file_path: str, valid_name: str, reason: str) -> None:
-    """Block research file operations."""
-    if valid_name in file_path:
-        block_response(reason)
-
-
-def block_explore(file_path: str, valid_name: str, reason: str) -> None:
-    """Block explore file operations."""
-    if valid_name in file_path:
-        block_response(reason)
-
-
-def block_commit(command: str, reason: str) -> None:
-    """Block git commit commands."""
-    if "git commit" in command:
-        block_response(reason)
 
 
 def setup_phase_guard() -> None:
@@ -95,11 +66,11 @@ def setup_phase_guard() -> None:
 
         # Apply phase-based blocking
         if current_phase == "explore":
-            block_research(file_path, valid_names["research"], reasons["research"])
-            block_planning(file_path, valid_names["planning"], reasons["planning"])
+            block_file_pattern(file_path, valid_names["research"], reasons["research"])
+            block_file_pattern(file_path, valid_names["planning"], reasons["planning"])
             block_coding(file_path, reasons["coding"])
         elif current_phase == "research":
-            block_planning(file_path, valid_names["planning"], reasons["planning"])
+            block_file_pattern(file_path, valid_names["planning"], reasons["planning"])
             block_coding(file_path, reasons["coding"])
         elif current_phase == "plan":
             block_coding(file_path, reasons["coding"])

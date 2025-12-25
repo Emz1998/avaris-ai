@@ -19,6 +19,8 @@ DEFAULT_CACHE_STATE = {
     "current_subagent": "",
     "is_active": False,
     "retrigger_flag": 0,
+    "build_skill_active": False,
+    "version_manager_guardrail_active": False,
 }
 
 

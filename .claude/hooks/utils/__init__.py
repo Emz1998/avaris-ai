@@ -5,6 +5,18 @@ from .status import get_status, set_status
 from .file_manager import read_file, write_file
 from .json_handler import load_json, set_json, get_json
 from .extractor import extract_slash_command_name
+from .blockers import (
+    is_code_file,
+    is_safe_git_command,
+    block_coding,
+    block_commit,
+    block_file_pattern,
+    block_tool,
+    block_unsafe_bash,
+    create_phase_blocker,
+    CODE_EXTENSIONS,
+    SAFE_GIT_PATTERNS,
+)
 
 __all__ = [
     # Input/Output
@@ -31,4 +43,15 @@ __all__ = [
     "get_json",
     # Extractor
     "extract_slash_command_name",
+    # Blockers
+    "is_code_file",
+    "is_safe_git_command",
+    "block_coding",
+    "block_commit",
+    "block_file_pattern",
+    "block_tool",
+    "block_unsafe_bash",
+    "create_phase_blocker",
+    "CODE_EXTENSIONS",
+    "SAFE_GIT_PATTERNS",
 ]

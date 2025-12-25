@@ -3,9 +3,6 @@
   "is_active": false,
   "current_subagent": "",
   "active_skills": "",
-  "phases_completed": [],
-  "skills_triggered": [],
-  "subagents_triggered": [],
   "current_phase": "explore",
   "block_stoppage": {
     "condition": false,
@@ -13,5 +10,17 @@
   },
   "retrigger_flag": 0,
   "active_subagent": "",
-  "code_phase_position": 0
+  "code_phase_position": 0,
+  "build_skill_active": false,
+  "version_manager_guardrail_active": false,
+  "current_version": "",
+  "codebase_explorer_guardrail_active": false,
+  "plan_consultant_guardrail_active": false,
+  "gpt_manager_guardrail_active": false,
+  "gemini_manager_guardrail_active": false,
+  "test_engineer_guardrail_active": false,
+  "fullstack_developer_guardrail_active": false,
+  "planner_guardrail_active": false,
+  "code_reviewer_guardrail_active": false,
+  "project_manager_guardrail_active": false
 }
