@@ -15,20 +15,20 @@ This document defines the structure for `roadmap.json` files used in project exe
   "target_release": "string (ISO date)",
   "status": "string",
   "phases": [],
+  "current": {},
   "summary": {},
   "metadata": {}
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `name` | string | Project name |
-| `version` | string | Version being tracked (e.g., "0.1.0") |
-| `target_release` | string | Target release date (ISO format) |
-| `status` | string | Overall status: `not_started`, `in_progress`, `completed` |
-| `phases` | array | Sequential execution phases |
-| `summary` | object | Computed counts for phases, milestones, tasks |
-| `metadata` | object | Schema version and last update timestamp |
+- **name**: Project name
+- **version**: Version being tracked (e.g., "0.1.0")
+- **target_release**: Target release date (ISO format)
+- **status**: Overall status: `not_started`, `in_progress`, `completed`
+- **phases**: Sequential execution phases
+- **current**: Active phase, milestone, and task IDs
+- **summary**: Computed counts for phases, milestones, tasks
+- **metadata**: Schema version and last update timestamp
 
 ---
 
@@ -45,12 +45,10 @@ Phases run **sequentially**. Order in array determines execution order.
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | string | Unique identifier (pattern: `PH-NNN`) |
-| `name` | string | Phase name |
-| `status` | string | `not_started`, `in_progress`, `completed` |
-| `milestones` | array | Milestones within this phase (run in parallel) |
+- **id**: Unique identifier (pattern: `PH-NNN`)
+- **name**: Phase name
+- **status**: `not_started`, `in_progress`, `completed`
+- **milestones**: Milestones within this phase (run in parallel)
 
 ---
 
@@ -71,16 +69,14 @@ Milestones within a phase run **in parallel**. One feature per milestone (1:1 ma
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | string | Unique identifier (pattern: `MS-NNN`) |
-| `feature` | string | Reference to feature in product.json (pattern: `FNNN`) |
-| `name` | string | Milestone name |
-| `goal` | string | What this milestone achieves |
-| `status` | string | `not_started`, `in_progress`, `completed` |
-| `dependencies` | array | MS-IDs that must complete first |
-| `success_criteria` | array | Feature-level success verification |
-| `tasks` | array | Tasks to complete this milestone |
+- **id**: Unique identifier (pattern: `MS-NNN`)
+- **feature**: Reference to feature in product.json (pattern: `FNNN`)
+- **name**: Milestone name
+- **goal**: What this milestone achieves
+- **status**: `not_started`, `in_progress`, `completed`
+- **dependencies**: MS-IDs that must complete first
+- **success_criteria**: Feature-level success verification
+- **tasks**: Tasks to complete this milestone
 
 ---
 
@@ -90,15 +86,13 @@ References SC from product.json. Verifies feature-level outcomes.
 
 ```json
 {
-  "references": ["SC-NNN"],
-  "met": false
+  "id_reference": "SC-NNN",
+  "status": "met|unmet"
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `references` | array | SC-IDs from product.json |
-| `met` | boolean | Whether criteria has been verified |
+- **id_reference**: SC-ID from product.json
+- **status**: `met` or `unmet`
 
 ---
 
@@ -118,15 +112,13 @@ Individual work items that satisfy acceptance criteria.
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | string | Unique identifier (pattern: `TNNN`) |
-| `description` | string | What the task accomplishes |
-| `status` | string | `not_started`, `in_progress`, `completed` |
-| `parallel` | boolean | Can run in parallel with other tasks |
-| `owner` | string | Agent responsible (from `.claude/agents/engineers/` or `main-agent`) |
-| `dependencies` | array | T-IDs that must complete first |
-| `acceptance_criteria` | array | AC references from product.json |
+- **id**: Unique identifier (pattern: `TNNN`)
+- **description**: What the task accomplishes
+- **status**: `not_started`, `in_progress`, `completed`
+- **parallel**: Can run in parallel with other tasks
+- **owner**: Agent responsible (from `.claude/agents/engineers/` or `main-agent`)
+- **dependencies**: T-IDs that must complete first
+- **acceptance_criteria**: AC references from product.json
 
 ---
 
@@ -136,15 +128,31 @@ References AC from product.json. Verifies user story behaviors.
 
 ```json
 {
-  "references": ["AC-NNN"],
-  "met": false
+  "id_reference": "AC-NNN",
+  "status": "met|unmet"
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `references` | array | AC-IDs from product.json user stories |
-| `met` | boolean | Whether criteria has been satisfied |
+- **id_reference**: AC-ID from product.json user stories
+- **status**: `met` or `unmet`
+
+---
+
+## Current
+
+Tracks the active phase, milestone, and task.
+
+```json
+{
+  "phase": "PH-NNN",
+  "milestone": "MS-NNN",
+  "task": "TNNN"
+}
+```
+
+- **phase**: Currently active phase ID
+- **milestone**: Currently active milestone ID
+- **task**: Currently active task ID
 
 ---
 
@@ -157,34 +165,24 @@ Computed counts updated after every mutation.
   "phases": {
     "total": 0,
     "pending": 0,
-    "completed": 0,
-    "recently_completed": "",
-    "current_phase": ""
+    "completed": 0
   },
   "milestones": {
     "total": 0,
     "pending": 0,
-    "completed": 0,
-    "recently_completed": "",
-    "current_milestone": ""
+    "completed": 0
   },
   "tasks": {
     "total": 0,
     "pending": 0,
-    "completed": 0,
-    "recently_completed": "",
-    "current_task": ""
+    "completed": 0
   }
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `total` | number | Total count |
-| `pending` | number | Count where status != `completed` |
-| `completed` | number | Count where status == `completed` |
-| `recently_completed` | string | ID of most recently completed item |
-| `current_*` | string | ID of item currently `in_progress` |
+- **total**: Total count
+- **pending**: Count where status != `completed`
+- **completed**: Count where status == `completed`
 
 ---
 
@@ -197,23 +195,19 @@ Computed counts updated after every mutation.
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `last_updated` | string | Last modification timestamp |
-| `schema_version` | string | Schema version for compatibility |
+- **last_updated**: Last modification timestamp
+- **schema_version**: Schema version for compatibility
 
 ---
 
 ## ID Patterns
 
-| Entity | Pattern | Example |
-|--------|---------|---------|
-| Phase | `PH-NNN` | PH-001 |
-| Milestone | `MS-NNN` | MS-001 |
-| Task | `TNNN` | T001 |
-| Success Criteria | `SC-NNN` | SC-001 (from product.json) |
-| Acceptance Criteria | `AC-NNN` | AC-001 (from product.json) |
-| Feature | `FNNN` | F001 (from product.json) |
+- **Phase**: `PH-NNN` (e.g., PH-001)
+- **Milestone**: `MS-NNN` (e.g., MS-001)
+- **Task**: `TNNN` (e.g., T001)
+- **Success Criteria**: `SC-NNN` (e.g., SC-001, from product.json)
+- **Acceptance Criteria**: `AC-NNN` (e.g., AC-001, from product.json)
+- **Feature**: `FNNN` (e.g., F001, from product.json)
 
 ---
 
@@ -221,31 +215,34 @@ Computed counts updated after every mutation.
 
 ```
 product.json                    roadmap.json
-──────────────────────────────────────────────────
-Feature (FNNN)            →     Milestone (MS-NNN)
-  └─ SC (SC-NNN)          →       └─ success_criteria.references
-  └─ User Story (US-NNN)
-       └─ AC (AC-NNN)     →     Task (TNNN)
-                                  └─ acceptance_criteria.references
+----------------------------------------------
+Feature (FNNN)            ->    Milestone (MS-NNN)
+  - SC (SC-NNN)           ->      - success_criteria.id_reference
+  - User Story (US-NNN)
+       - AC (AC-NNN)      ->    Task (TNNN)
+                                  - acceptance_criteria.id_reference
 ```
 
 ---
 
 ## Completion Logic
 
-| Level | Complete When |
-|-------|---------------|
-| Task | status = `completed` AND all acceptance_criteria.met = true |
-| Milestone | All tasks complete AND all success_criteria.met = true |
-| Phase | All milestones complete |
-| Roadmap | All phases complete |
+- **Task**: status = `completed` AND all acceptance_criteria.status = `met`
+- **Milestone**: All tasks complete AND all success_criteria.status = `met`
+- **Phase**: All milestones complete
+- **Roadmap**: All phases complete
 
 ---
 
 ## Status Values
 
-| Value | Meaning |
-|-------|---------|
-| `not_started` | Work has not begun |
-| `in_progress` | Currently being worked on |
-| `completed` | Work finished and verified |
+- **not_started**: Work has not begun
+- **in_progress**: Currently being worked on
+- **completed**: Work finished and verified
+
+---
+
+## Criteria Status Values
+
+- **met**: Criteria has been satisfied
+- **unmet**: Criteria has not been satisfied

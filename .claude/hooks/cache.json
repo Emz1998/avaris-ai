@@ -1,26 +1,6 @@
 {
-  "session_id": "c44b72c8-c73b-4d54-95d2-675625f348fb",
-  "is_active": false,
-  "current_subagent": "",
-  "active_skills": "",
-  "current_phase": "explore",
-  "block_stoppage": {
-    "condition": false,
-    "reason": "Phase transition allowed"
-  },
-  "retrigger_flag": 0,
-  "active_subagent": "",
-  "code_phase_position": 0,
   "build_skill_active": false,
-  "version_manager_guardrail_active": false,
-  "current_version": "",
-  "codebase_explorer_guardrail_active": false,
-  "plan_consultant_guardrail_active": false,
-  "gpt_manager_guardrail_active": false,
-  "gemini_manager_guardrail_active": false,
-  "test_engineer_guardrail_active": false,
-  "fullstack_developer_guardrail_active": false,
-  "planner_guardrail_active": false,
-  "code_reviewer_guardrail_active": false,
-  "project_manager_guardrail_active": false
+  "current_phase": "code",
+  "engineer_task_logger_guardrail_active": true,
+  "engineer_task_logged": false
 }

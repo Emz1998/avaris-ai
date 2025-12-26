@@ -2,6 +2,7 @@
 name: hook
 description: Create, update, configure, or validate Claude hooks for various events and integrations
 argument-hint: <requirements>
+model: opus
 ---
 
 <instruction> Use `hooks-management` skills to create or update hooks based on the requirements: $ARGUMENTS</instruction>

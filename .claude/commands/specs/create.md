@@ -9,12 +9,13 @@ model: opus
 <specs-type> $ARGUMENTS </specs-type>
 
 <dependency-chain>
-brainstorm-summary.md → prd.md → tech-specs.md → ui-ux.md
+app-vision.md → prd.json → tech-specs.md → ui-ux.md
 </dependency-chain>
 
 <instruction>
 
-- Use `specs-creator` skill to generate <specs-type> specification document
+- Use `product-management` skill to generate product.json if specs-type is prd
+- Use `specs-creator` skill to generate tech-specs.md or ui-ux.md specification document if specs-type is tech-specs or ui-ux
 - If <specs-type> is not specified, generate all specification documents (prd, tech-specs, and ux-specs)
 
 </instruction>

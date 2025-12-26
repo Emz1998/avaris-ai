@@ -6,7 +6,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from utils import (
+from utils import (  # type: ignore
     get_cache,
     block_response,
     read_stdin_json,

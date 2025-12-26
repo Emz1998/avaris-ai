@@ -27,13 +27,11 @@ def track_phases(phase: str) -> None:
 
 
 DEFAULT_PHASES = [
-    "log:task",
     "explore",
     "discuss",
     "plan",
     "code",
-    "code-review",
-    "commit",
+    "log:task",
 ]
 
 
@@ -55,14 +53,23 @@ def is_valid_phase_transition(
     """Check if transition to next phase is valid."""
     current_phase = get_cache("current_phase") or "initial"
 
-    # Handle unknown phase
+    # Handle unknown next_phase
     if next_phase not in all_phases:
         print(get_transition_message("unknown"), file=sys.stderr)
         return False
 
     # Handle initial state - allow any valid phase
-    if current_phase == "initial" or current_phase not in all_phases:
+    if current_phase == "initial":
         return True
+
+    # Handle invalid current_phase - reset to first phase and validate
+    if current_phase not in all_phases:
+        print(
+            f"Warning: Invalid current_phase '{current_phase}', resetting to 'explore'",
+            file=sys.stderr,
+        )
+        set_cache("current_phase", "explore")
+        current_phase = "explore"
 
     current_idx = all_phases.index(current_phase)
     next_idx = all_phases.index(next_phase)
@@ -84,27 +91,22 @@ def is_valid_phase_transition(
 
 def validate_phase_transition(hook_input: dict) -> None:
     """Main phase transition validation."""
-    if not get_cache("is_active"):
+    if not get_cache("build_skill_active"):
         sys.exit(0)
 
     tool_name = hook_input.get("tool_name", "")
     tool_input = hook_input.get("tool_input", {})
-    prompt = hook_input.get("prompt", "")
+    print(tool_input)
 
-    if not tool_name and not prompt:
+    if not tool_name:
         sys.exit(0)
 
-    if tool_name != "SlashCommand" and not prompt.startswith("/"):
-        sys.exit(0)
-
-    # Extract command from tool input or prompt
-    command = ""
-    if isinstance(tool_input, dict):
-        command = tool_input.get("command", "")
-    if not command and prompt:
-        command = prompt
-
-    next_phase = extract_slash_command_name(command)
+    # Extract phase/command based on tool type or prompt
+    next_phase = ""
+    if tool_name == "Skill" and isinstance(tool_input, dict):
+        # Skill tool: extract from skill field
+        next_phase = tool_input.get("skill", "")
+        print(next_phase)
 
     if not next_phase:
         sys.exit(0)
@@ -126,3 +128,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    print("is this working?")

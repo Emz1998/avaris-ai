@@ -13,20 +13,31 @@ def get_project_dir() -> Path:
     return Path(project_dir)
 
 
-def get_current_version() -> str:
-    """Retrieve current_version from product.json."""
+def get_prd_path() -> Path:
+    """Get the path to PRD.json."""
     project_dir = get_project_dir()
-    product_path = project_dir / "project" / "product.json"
+    return project_dir / "project" / "product" / "PRD.json"
 
-    if not product_path.exists():
-        return ""
+
+def load_prd() -> dict | None:
+    """Load PRD.json file."""
+    prd_path = get_prd_path()
+    if not prd_path.exists():
+        return None
 
     try:
-        with open(product_path, "r") as f:
-            product = json.load(f)
-        return product.get("current_version", "")
+        with open(prd_path, "r") as f:
+            return json.load(f)
     except (json.JSONDecodeError, IOError):
+        return None
+
+
+def get_current_version() -> str:
+    """Retrieve current_version from PRD.json."""
+    prd = load_prd()
+    if prd is None:
         return ""
+    return prd.get("current_version", "")
 
 
 def get_roadmap_path(version: str) -> Path:
@@ -371,7 +382,7 @@ def run_auto_resolver() -> tuple[bool, list[str]]:
     """Run the auto-resolver for milestones and phases."""
     version = get_current_version()
     if not version:
-        return False, ["Could not retrieve current_version from product.json"]
+        return False, ["Could not retrieve current_version from project/product/PRD.json"]
 
     roadmap_path = get_roadmap_path(version)
     roadmap = load_roadmap(roadmap_path)

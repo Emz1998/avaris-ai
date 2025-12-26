@@ -11,18 +11,21 @@ description: Generates Product Requirements Documents (PRDs) in JSON format foll
 
 1. Read app vision: `project/executive/app-vision.md` (primary context source)
 2. Read schema: [references/schema.md](references/schema.md)
-3. Reference sample structure: [references/sample_product.json](references/sample_product.json)
+3. Reference sample structure: [references/schema.json](references/schema.json)
 4. Extract product information from app vision, ask user for any missing details
-5. Generate `product.json` at `project/product.json`
+5. Generate `product.json` at `project/product/product.json`
 6. Validate JSON structure against schema
 
 **Note**: The app-vision.md provides strategic context (vision, problem, solutions, goals) that informs the PRD structure.
+
+**Important**: The schema.json is just a sample structure. Ignore the content and just focus on the structure.
 
 ## Information Gathering
 
 Ask user for (in order of priority):
 
 ### Required - Overview
+
 - Product name and type
 - Elevator pitch (1-2 sentences)
 - Industry problem being solved
@@ -30,11 +33,13 @@ Ask user for (in order of priority):
 - Measurable goals
 
 ### Required - Versioning
+
 - Current development version
 - Target stable version
 - Version release dates
 
 ### Required - Features (per version)
+
 - Feature name and description
 - User stories (As a [role], I want [action], so that [benefit])
 - Acceptance criteria (Given [context], when [action], then [outcome])
@@ -45,6 +50,7 @@ Ask user for (in order of priority):
 - Success criteria
 
 ### Required - Technical
+
 - Tech stack
 
 ## Output Structure
@@ -62,16 +68,16 @@ Ask user for (in order of priority):
 
 ## ID Conventions
 
-| Prefix | Entity | Example |
-|--------|--------|---------|
-| `F` | Feature | `F001` |
-| `US` | User Story | `US-001` |
-| `AC` | Acceptance Criteria | `AC-001` |
-| `FR` | Functional Requirement | `FR-001` |
-| `NFR` | Non-Functional Requirement | `NFR-001` |
-| `D` | Dependency | `D001` |
-| `R` | Risk | `R001` |
-| `SC` | Success Criteria | `SC-001` |
+| Prefix | Entity                     | Example   |
+| ------ | -------------------------- | --------- |
+| `F`    | Feature                    | `F001`    |
+| `US`   | User Story                 | `US-001`  |
+| `AC`   | Acceptance Criteria        | `AC-001`  |
+| `FR`   | Functional Requirement     | `FR-001`  |
+| `NFR`  | Non-Functional Requirement | `NFR-001` |
+| `D`    | Dependency                 | `D001`    |
+| `R`    | Risk                       | `R001`    |
+| `SC`   | Success Criteria           | `SC-001`  |
 
 ## Rules
 
@@ -85,7 +91,7 @@ Ask user for (in order of priority):
 
 ## Acceptance Criteria
 
-- JSON saved to `project/product.json`
+- JSON saved to `project/product/product.json`
 - All required fields present per schema
 - Valid JSON syntax
 - IDs follow naming conventions

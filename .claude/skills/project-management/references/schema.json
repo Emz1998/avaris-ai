@@ -1,0 +1,169 @@
+{
+  "name": "Project Name",
+  "version": "0.1.0",
+  "target_release": "2026-01-01",
+  "status": "not_started",
+  "phases": [
+    {
+      "id": "PH-001",
+      "name": "Foundation - Environment Setup",
+      "status": "in_progress",
+      "milestones": [
+        {
+          "id": "MS-001",
+          "feature": "F001",
+          "name": "Environment Setup",
+          "goal": "Next.js 15 + React 19 fully configured",
+          "status": "completed",
+          "dependencies": [],
+          "success_criteria": [
+            {
+              "id_reference": "SC-001",
+              "status": "met"
+            }
+          ],
+          "tasks": [
+            {
+              "id": "T001",
+              "description": "Initialize Next.js 15.1 project",
+              "status": "completed",
+              "parallel": false,
+              "owner": "fullstack-developer",
+              "dependencies": [],
+              "acceptance_criteria": [
+                {
+                  "id_reference": "AC-001",
+                  "status": "met"
+                },
+                {
+                  "id_reference": "AC-002",
+                  "status": "met"
+                }
+              ]
+            },
+            {
+              "id": "T002",
+              "description": "Create TypeScript interfaces for core data structures",
+              "status": "completed",
+              "parallel": false,
+              "owner": "fullstack-developer",
+              "dependencies": [],
+              "acceptance_criteria": [
+                {
+                  "id_reference": "AC-003",
+                  "status": "met"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "MS-002",
+          "feature": "F002",
+          "name": "Define Contracts/Types",
+          "goal": "Define core type contracts and validation schemas that establish the data structure foundation for features",
+          "status": "in_progress",
+          "dependencies": [],
+          "success_criteria": [
+            {
+              "id_reference": "SC-002",
+              "status": "unmet"
+            }
+          ],
+          "tasks": [
+            {
+              "id": "T003",
+              "description": "Create TypeScript interfaces for core data structures",
+              "status": "in_progress",
+              "parallel": false,
+              "owner": "fullstack-developer",
+              "dependencies": [],
+              "acceptance_criteria": [
+                {
+                  "id_reference": "AC-004",
+                  "status": "met"
+                }
+              ]
+            },
+            {
+              "id": "T004",
+              "description": "Create TypeScript interfaces for core data structures",
+              "status": "in_progress",
+              "parallel": false,
+              "owner": "fullstack-developer",
+              "dependencies": [],
+              "acceptance_criteria": [
+                {
+                  "id_reference": "AC-005",
+                  "status": "met"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PH-002",
+      "name": "Build - Feature Development",
+      "status": "in_progress",
+      "milestones": [
+        {
+          "id": "MS-003",
+          "feature": "F003",
+          "name": "Feature Development",
+          "status": "in_progress",
+          "dependencies": [],
+          "success_criteria": [
+            {
+              "id_reference": "SC-002",
+              "status": "met"
+            }
+          ],
+          "tasks": [
+            {
+              "id": "T005",
+              "description": "Create TypeScript interfaces for core data structures",
+              "status": "in_progress",
+              "parallel": false,
+              "owner": "fullstack-developer",
+              "dependencies": [],
+              "acceptance_criteria": [
+                {
+                  "id_reference": "AC-006",
+                  "status": "met"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "current": {
+    "phase": "PH-001",
+    "milestone": "MS-002",
+    "task": "T003"
+  },
+  "summary": {
+    "phases": {
+      "total": 2,
+      "pending": 2,
+      "completed": 0
+    },
+    "milestones": {
+      "total": 3,
+      "pending": 2,
+      "completed": 1
+    },
+    "tasks": {
+      "total": 5,
+      "pending": 3,
+      "completed": 2
+    }
+  },
+  "metadata": {
+    "last_updated": "2025-12-22T20:53:34.869592+00:00",
+    "schema_version": "1.0.0"
+  }
+}

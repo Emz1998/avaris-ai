@@ -86,9 +86,59 @@ python3 .claude/scripts/tmux-claude-sessions.py -n 3 -w --attach
 
 **Requirements**: tmux must be installed (`sudo apt install tmux`)
 
+### PRD Generator Scripts
+
+#### 6. prd_to_markdown.py
+
+**Purpose**: Generate PRD.md from product.json using templates
+
+```bash
+# Default: converts project/product/product.json to project/product/PRD.md
+python3 .claude/scripts/prd_generator/prd_to_markdown.py
+
+# Custom input/output paths
+python3 .claude/scripts/prd_generator/prd_to_markdown.py -i path/to/product.json -o path/to/PRD.md
+
+# Custom templates directory
+python3 .claude/scripts/prd_generator/prd_to_markdown.py -t path/to/templates
+```
+
+**Options**:
+
+- `-i, --input` - Input JSON file path (default: `project/product/product.json`)
+- `-o, --output` - Output markdown file path (default: `project/product/PRD.md`)
+- `-t, --templates` - Templates directory (default: `.claude/skills/product-management/templates`)
+
+**Templates Used**:
+
+- `PRD.md` - Main PRD document template
+- `version.md` - Version section template
+- `feature.md` - Feature section template
+- `user_story.md` - User story template
+- `risk.md` - Risk template
+
+### Roadmap Scripts
+
+#### 7. roadmap_to_markdown.py
+
+**Purpose**: Convert project roadmap JSON to markdown format
+
+```bash
+# Default: converts schema.json to project/product/product.md
+python3 .claude/scripts/roadmap_to_markdown.py
+
+# Custom input/output paths
+python3 .claude/scripts/roadmap_to_markdown.py -i path/to/roadmap.json -o path/to/output.md
+```
+
+**Options**:
+
+- `-i, --input` - Input JSON file path (default: `.claude/skills/project-management/references/schema.json`)
+- `-o, --output` - Output markdown file path (default: `project/product/product.md`)
+
 ### Setup Scripts
 
-#### 6. setup-yolo-aliases.sh
+#### 7. setup-yolo-aliases.sh
 
 **Purpose**: Configure shell aliases for quick Claude commands
 

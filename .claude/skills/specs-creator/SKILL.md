@@ -1,6 +1,6 @@
 ---
 name: specs-creator
-description: Use PROACTIVELY this skill when you need to create tech specs and UI/UX specs based on feature description. If the user specify "Create Tech Specs" or "Create UI/UX Specs", this skill must be triggered.
+description: Creates tech specs and UI/UX specs based on feature requirements. Use when user mentions "Create Tech Specs", "Create UI/UX Specs", or needs technical/design documentation for a version.
 ---
 
 **Goal**: Create or update comprehensive tech specs and UI/UX specs based on feature requirements
@@ -13,38 +13,82 @@ app-vision.md → PRD.md → tech-specs.md → ui-ux.md
 
 ## Workflow
 
-1. Read and analyze the app-vision.md file to understand the project vision and goals
-2. Choose the right template in `.claude/skills/specs-creator/templates/` based on the dependency chain
-3. Generate the spec based on the template and the app-vision.md file
-4. Provide comprehensive report to user with specs details, location, and usage guidance
-
-**Important**: If the spec type is `tech-specs`, you have to both read the `app-vision.md` and `prd.md` files to understand the architecture and the dependencies
-**Important**: If the spec type is `ui-ux`, you have to read all preceding specs to understand the overall product and its system
+1. Read `project/product/PRD.json` to determine current version and features
+2. Read `project/executive/app-vision.md` for project vision
+3. For tech-specs: also read `project/product/PRD.md` for requirements
+4. For ui-ux specs: read all preceding specs in the dependency chain
+5. Choose template from `.claude/skills/specs-creator/templates/`
+6. Generate spec with version-specific content
+7. Save to `project/{version}/specs/` with correct naming
+8. Report completion with file path and next steps
 
 ## Constraints
 
-- NEVER create a spec if its dependency doesn't exist yet (see Dependency Chain)
-- NEVER write or modify actual code implementation
-- NEVER overwrite existing specs without explicit user approval
-- DO NOT make architectural decisions beyond documentation scope
-- NEVER skip template compliance validation
-- DO NOT create specs outside designated `project/{version}/specs/` directory
-- NEVER assume requirements without user clarification
+- NEVER create a spec if its dependency doesn't exist yet
+- NEVER overwrite existing specs without user approval
+- DO NOT create specs outside `project/{version}/specs/` directory
+- NEVER assume requirements - ask for clarification
+- KEEP specs focused on the target version's features
 
 ## Acceptance Criteria
 
-- [ ] Generated spec contains all required sections from the corresponding template
-- [ ] All placeholder fields in the template are populated with feature-specific content
-- [ ] Spec file is saved to `project/{version}/specs/` directory with correct naming convention
-- [ ] Completion report includes: file path, spec type, and next steps for the user
+- [ ] Spec contains all required sections from template
+- [ ] Frontmatter includes `version-coverage`
+- [ ] Database models include future-proofing considerations
+- [ ] File saved to `project/{version}/specs/` directory
+- [ ] Completion report includes: file path, version, next steps
 
 ## References
 
-- **PRD Path** `project/PRD.md`
-- **App Vision Path** `project/executive/app-vision.md`
-- To get the version, read `project/product.json`
+- **PRD Path:** `project/product/PRD.md`
+- **PRD JSON:** `project/product/PRD.json`
+- **App Vision:** `project/executive/app-vision.md`
+- **Tech Template:** `.claude/skills/specs-creator/templates/tech.md`
+- **UX Template:** `.claude/skills/specs-creator/templates/ux.md`
 
-### Templates
+## Considerations
 
-- **Tech Specs Template** `.claude/skills/specs-creator/templates/tech.md`
-- **UX Specs Template** `.claude/skills/specs-creator/templates/ux.md`
+### Per-Version Approach
+
+Tech specs are created per version (e.g., `v0.1.0`, `v0.2.0`). Each version's spec focuses only on features in that release.
+
+**Benefits:**
+
+- Clear scope boundaries per release
+- Smaller, focused documents
+- Specs can evolve as you learn from previous versions
+- Aligns with iterative/MVP development
+
+**Cross-Version Concerns:**
+
+- Use the PRD as the north star for upcoming features
+- Design database schemas with nullable fields for future features
+- Reference earlier version specs when building on existing systems
+
+### Database Schema Future-Proofing
+
+When designing data models, anticipate future versions:
+
+- Add `type` or `category` columns for entities that may have variants later
+- Use nullable fields for attributes coming in future versions
+- Prefer additive schema changes (new tables/columns) over modifications
+- Document "Future Considerations" for each entity
+
+**Example:**
+
+```
+predictions table (v0.1.0):
+- prediction_type: 'moneyline' (default)  // Ready for 'spread', 'total' in v1.0.0
+- spread_value: null                       // Populated in v1.0.0
+- total_value: null                        // Populated in v1.0.0
+```
+
+### Frontmatter
+
+Tech specs should include version in YAML frontmatter:
+
+```yaml
+---
+version: v0.1.0
+---
+```

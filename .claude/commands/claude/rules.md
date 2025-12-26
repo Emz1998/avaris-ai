@@ -3,7 +3,7 @@ name: rules
 description: Generate the project rules by using the rules-management skill
 allowed-tools: Task, Read
 argument-hint:
-model: sonnet
+model: opus
 ---
 
 <instruction> Use rules-management skill to create or update project rules with requirements $ARGUMENTS </instruction>

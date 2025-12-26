@@ -56,7 +56,9 @@ def process(args: str) -> None:
 
     version = get_current_version()
     if not version:
-        block_response("Could not retrieve current_version from project/product.json")
+        block_response(
+            "Could not retrieve current_version from project/product/PRD.json"
+        )
 
     roadmap_path = get_roadmap_path(version)
     if not roadmap_path.exists():
@@ -66,7 +68,7 @@ def process(args: str) -> None:
     if roadmap is None:
         block_response(f"Could not load roadmap from: {roadmap_path}")
 
-    task, ac = find_ac_in_roadmap(roadmap, ac_id)
+    _task, ac = find_ac_in_roadmap(roadmap, ac_id)
     if ac is None:
         block_response(f"Acceptance criteria '{ac_id}' not found in roadmap")
 

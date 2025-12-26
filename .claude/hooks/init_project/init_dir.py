@@ -65,7 +65,7 @@ def build_milestone_dir(milestone_name: str = "") -> dict[str, Any]:
     }
 
 
-def get_version(product_file_path: str = "project/product.json") -> str:
+def get_version(product_file_path: str = "project/product/PRD.json") -> str:
     return get_json("current_version", file_path=product_file_path)
 
 
@@ -163,7 +163,7 @@ def main() -> bool:
 
     init_dir("project")
     current_milestone = get_current_milestone("project/status.json")
-    current_version = get_version("project/product.json")
+    current_version = get_version("project/product/PRD.json")
     project_dir = build_project_dir(
         version=current_version, milestone_name=current_milestone
     )
@@ -172,7 +172,7 @@ def main() -> bool:
 
 
 def test():
-    current_version = get_version("project/product.json")
+    current_version = get_version("project/product/PRD.json")
     current_milestone = "MS-001: [Unknown]"
     current_phase = get_current_phase("project/status.json")
     init_milestone_contents(current_version, current_milestone, current_phase)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Task Status Logger Module
+# Task Status Logger Module - Updates task status in roadmap
 
 import sys
 from pathlib import Path
@@ -65,7 +65,9 @@ def process(args: str) -> None:
     # Get current version
     version = get_current_version()
     if not version:
-        block_response("Could not retrieve current_version from project/product.json")
+        block_response(
+            "Could not retrieve current_version from project/product/PRD.json"
+        )
 
     # Get roadmap path
     roadmap_path = get_roadmap_path(version)
@@ -77,9 +79,10 @@ def process(args: str) -> None:
     if roadmap is None:
         block_response(f"Could not load roadmap from: {roadmap_path}")
 
-    phase, milestone, task = find_task_in_roadmap(roadmap, task_id)
-    if task is None:
+    _phase, milestone, task = find_task_in_roadmap(roadmap, task_id)
+    if task is None or milestone is None:
         block_response(f"Task '{task_id}' not found in roadmap")
+    assert milestone is not None and task is not None
 
     # Check dependencies before allowing in_progress
     if status == "in_progress":
@@ -116,7 +119,7 @@ def process(args: str) -> None:
     log(f"Task '{task_id}' status updated to '{status}'")
 
     # Run auto-resolver
-    success, resolutions = run_auto_resolver()
+    _success, resolutions = run_auto_resolver()
     for msg in resolutions:
         log(msg)
 

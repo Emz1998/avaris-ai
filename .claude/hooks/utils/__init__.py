@@ -1,5 +1,5 @@
 from .input import read_stdin_json
-from .output import log, success_response, block_response, add_context, success_output
+from .output import log, success_response, block_response, add_context, success_output, print_and_exit
 from .cache import get_cache, set_cache, write_cache, load_cache
 from .status import get_status, set_status
 from .file_manager import read_file, write_file
@@ -17,6 +17,16 @@ from .blockers import (
     CODE_EXTENSIONS,
     SAFE_GIT_PATTERNS,
 )
+from .guardrail_base import (
+    GuardrailConfig,
+    GuardrailRunner,
+    get_milestone_folder_name,
+    get_milestone_context,
+    create_directory_validator,
+    create_session_file_validator,
+    create_pattern_validator,
+    create_extension_blocker,
+)
 
 __all__ = [
     # Input/Output
@@ -26,6 +36,7 @@ __all__ = [
     "block_response",
     "add_context",
     "success_output",
+    "print_and_exit",
     # Cache
     "get_cache",
     "set_cache",
@@ -54,4 +65,13 @@ __all__ = [
     "create_phase_blocker",
     "CODE_EXTENSIONS",
     "SAFE_GIT_PATTERNS",
+    # Guardrail base
+    "GuardrailConfig",
+    "GuardrailRunner",
+    "get_milestone_folder_name",
+    "get_milestone_context",
+    "create_directory_validator",
+    "create_session_file_validator",
+    "create_pattern_validator",
+    "create_extension_blocker",
 ]
